@@ -9,6 +9,7 @@ import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.client.service.productionTelegramApiService
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
 import ru.lavafrai.ktgram.types.*
+import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.utils.extractBotId
 import ru.lavafrai.ktgram.utils.validateToken
 import java.util.concurrent.atomic.AtomicBoolean
@@ -92,6 +93,9 @@ class Bot (
         return api.getMe()
     }
 
+    /**
+     * Use this method to send text messages. On success, the sent Message is returned.
+     */
     suspend fun sendMessage(
         chatId: Int,
         text: String,
@@ -107,5 +111,39 @@ class Bot (
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendMessage(
         chatId, text, businessConnectionId, messageThreadId, parseMode, entities, linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
+
+    /**
+     * Use this method to forward messages of any kind. Service messages and messages with protected content can't be forwarded. On success, the sent Message is returned.
+     */
+    suspend fun forwardMessage(
+        chatId: Int,
+        messageThreadId: Int? = null,
+        fromChatId: Int,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageId: Int,
+    ) = api.forwardMessage(
+        chatId, messageThreadId, fromChatId, disableNotification, protectContent, messageId
+    )
+
+    /**
+     * Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
+     */
+    suspend fun copyMessage(
+        chatId: Int,
+        messageThreadId: Int? = null,
+        fromChatId: Int,
+        messageId: Int,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null
+    ) = api.copyMessage(
+        chatId, messageThreadId, fromChatId, messageId, caption, parseMode, captionEntities, showCaptionAboveMedia, disableNotification, protectContent, replyParameters, replyMarkup
     )
 }

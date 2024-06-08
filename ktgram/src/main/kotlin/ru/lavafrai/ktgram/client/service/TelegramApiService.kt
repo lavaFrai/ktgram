@@ -46,6 +46,57 @@ interface TelegramApiService {
         @Field("reply_parameters") replyParameters: ReplyParameters?,
         @Field("reply_markup") replyMarkup: ReplyMarkup?,
     ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("forwardMessage")
+    suspend fun forwardMessage(
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int? = null,
+        @Field("from_chat_id") fromChatId: Int,
+        @Field("disable_notification") disableNotification: Boolean? = null,
+        @Field("protect_content") protectContent: Boolean? = null,
+        @Field("message_id") messageId: Int,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("forwardMessages")
+    suspend fun forwardMessages(
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int? = null,
+        @Field("from_chat_id") fromChatId: Int,
+        @Field("message_ids") messageIds: List<Int>,
+        @Field("disable_notification") disableNotification: Boolean? = null,
+        @Field("protect_content") protectContent: Boolean? = null,
+    ): TelegramResult<List<Int>>
+
+    @FormUrlEncoded
+    @POST("copyMessage")
+    suspend fun copyMessage(
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int? = null,
+        @Field("from_chat_id") fromChatId: Int,
+        @Field("message_id") messageId: Int,
+        @Field("caption") caption: String? = null,
+        @Field("parse_mode") parseMode: String? = null,
+        @Field("caption_entities") captionEntities: List<MessageEntity>? = null,
+        @Field("show_caption_above_media") showCaptionAboveMedia: Boolean? = null,
+        @Field("disable_notification") disableNotification: Boolean? = null,
+        @Field("protect_content") protectContent: Boolean? = null,
+        @Field("reply_parameters") replyParameters: ReplyParameters? = null,
+        @Field("reply_markup") replyMarkup: ReplyMarkup? = null,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("copyMessages")
+    suspend fun copyMessages(
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int? = null,
+        @Field("from_chat_id") fromChatId: Int,
+        @Field("message_ids") messageIds: List<Int>,
+        @Field("disable_notification") disableNotification: Boolean? = null,
+        @Field("protect_content") protectContent: Boolean? = null,
+        @Field("remove_caption") removeCaption: Boolean? = null,
+    ): TelegramResult<List<Int>>
 }
 
 const val PRODUCTION = "https://api.telegram.org/bot{token}/"

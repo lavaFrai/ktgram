@@ -1,5 +1,6 @@
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.lavafrai.ktgram.types.Birthdate
 import ru.lavafrai.ktgram.types.Chat
 import ru.lavafrai.ktgram.types.Message
 import ru.lavafrai.ktgram.types.TelegramObject

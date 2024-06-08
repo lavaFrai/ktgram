@@ -1,6 +1,7 @@
 package ru.lavafrai.ktgram.client
 
 import ReplyParameters
+import retrofit2.http.Field
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.types.ReplyMarkup
 import ru.lavafrai.ktgram.types.User
@@ -39,6 +40,57 @@ class TelegramApi(
     ) = service.sendMessage(
         businessConnectionId, chatId, messageThreadId, text, parseMode, entities, linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     ).getResult(bot)
+
+    suspend fun forwardMessage(
+        chatId: Int,
+        messageThreadId: Int? = null,
+        fromChatId: Int,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageId: Int,
+    ) = service.forwardMessage(
+        chatId, messageThreadId, fromChatId, disableNotification, protectContent, messageId
+    ).getResult(bot)
+
+    suspend fun forwardMessages(
+        chatId: Int,
+        messageThreadId: Int? = null,
+        fromChatId: Int,
+        messageIds: List<Int>,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ) = service.forwardMessages(
+        chatId, messageThreadId, fromChatId, messageIds, disableNotification, protectContent
+    ).getResult()
+
+    suspend fun copyMessage(
+        chatId: Int,
+        messageThreadId: Int? = null,
+        fromChatId: Int,
+        messageId: Int,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.copyMessage(
+        chatId, messageThreadId, fromChatId, messageId, caption, parseMode, captionEntities, showCaptionAboveMedia, disableNotification, protectContent, replyParameters, replyMarkup
+    ).getResult(bot)
+
+    suspend fun copyMessages(
+        chatId: Int,
+        messageThreadId: Int? = null,
+        fromChatId: Int,
+        messageIds: List<Int>,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        removeCaption: Boolean? = null,
+    ) = service.copyMessages(
+        chatId, messageThreadId, fromChatId, messageIds, disableNotification, protectContent, removeCaption
+    ).getResult()
 }
 
 fun getAllUpdates() = listOf(

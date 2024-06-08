@@ -20,3 +20,11 @@ fun <O: List<TelegramObject>, T: TelegramResult<O>> T.getResult(bot: Bot): O {
     this.result!!.map { it.setContext(bot) }
     return this.result
 }
+
+fun <O: Int, T: TelegramResult<O>> T.getResult(): O {
+    return this.result!!
+}
+
+fun <O: List<Int>, T: TelegramResult<O>> T.getResult(): O {
+    return this.result!!
+}

@@ -10,6 +10,10 @@ fun Dispatcher.addHandlers() {
     messageFilter({ update -> update.message?.text?.startsWith("/") ?: false }) {
         message.reply("Command: ${update.message!!.text!!.removePrefix("/")}")
     }
+
+    message {
+        bot.sendMessage(update.message!!.chat.id, "Echo: ${update.message!!.text}", protectContent = true)
+    }
 }
 
 

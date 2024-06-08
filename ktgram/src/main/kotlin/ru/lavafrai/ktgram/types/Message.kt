@@ -200,12 +200,76 @@ class Message(
     @SerialName("web_app_data") val webAppData: WebAppData? = null,
     @SerialName("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
 ) : TelegramObject() {
-    suspend fun answer(text: String): Message {
-        return bot.sendMessage(chat.id, text)
+    suspend fun answer(
+        text: String,
+        parseMode: String? = null,
+        entities: List<MessageEntity>? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendMessage(
+            chat.id,
+            text,
+            parseMode = parseMode,
+            entities = entities,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
     }
 
-    suspend fun reply(text: String): Message {
-        return bot.sendMessage(chat.id, text, replyParameters = ReplyParameters(messageId = this.messageId))
+    suspend fun reply(
+        text: String,
+        parseMode: String? = null,
+        entities: List<MessageEntity>? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendMessage(
+            chat.id,
+            text,
+            parseMode = parseMode,
+            entities = entities,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId = this.messageId),
+        )
+    }
+
+    suspend fun forward(
+        chatId: Int,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): Message {
+        return bot.forwardMessage(
+            chatId,
+            fromChatId = chat.id,
+            messageId = messageId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+        )
+    }
+
+    suspend fun copy(
+        chatId: Int,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): Message {
+        return bot.copyMessage(
+            chatId,
+            fromChatId = chat.id,
+            messageId = messageId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+        )
     }
 
     val type: MessageType

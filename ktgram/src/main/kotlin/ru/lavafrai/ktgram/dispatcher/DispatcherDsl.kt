@@ -16,8 +16,9 @@ fun Dispatcher.update(vararg types: UpdateType, handle: suspend UpdateHandlerEnv
     addHandler(handler)
 }
 
-fun Dispatcher.message(handle: suspend UpdateHandlerEnvironment.() -> Unit) {
-    update(UpdateType.Message, handle=handle)
+fun Dispatcher.message(handle: suspend MessageHandlerEnvironment.() -> Unit) {
+    val handler = MessageHandler(handle, this)
+    addHandler(handler)
 }
 
 fun Dispatcher.message(vararg types: MessageType, handle: suspend MessageHandlerEnvironment.() -> Unit) {

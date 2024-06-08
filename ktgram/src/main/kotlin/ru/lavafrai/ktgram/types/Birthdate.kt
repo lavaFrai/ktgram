@@ -1,3 +1,5 @@
+package ru.lavafrai.ktgram.types
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.ktgram.types.TelegramObject
