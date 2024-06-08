@@ -4,3 +4,4 @@ plugins {
 rootProject.name = "ktgram"
 include(":ktgram")
 include(":examples:echo")
+include(":examples:filters")

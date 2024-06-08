@@ -25,7 +25,7 @@ import ru.lavafrai.ktgram.dispatcher.dsl.text
 
 fun Dispatcher.addHandlers() {
     text {
-        println(message.reply("You said: ${message.text}"))
+        message.reply("You said: ${message.text}")
     }
 }
 

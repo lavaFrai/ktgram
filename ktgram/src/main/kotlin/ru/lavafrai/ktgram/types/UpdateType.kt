@@ -16,7 +16,6 @@ enum class UpdateType {
     ChatMember,
     ChatJoinRequest,
     MessageReaction,
-    MessageReactionCount,
     ChatBoost,
     RemovedChatBoost,
     DeletedBusinessMessage,

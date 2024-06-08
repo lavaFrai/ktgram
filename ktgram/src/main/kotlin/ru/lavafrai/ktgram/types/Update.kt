@@ -72,6 +72,18 @@ class Update(
         get() {
             return when {
                 message != null -> UpdateType.Message
+                editedMessage != null -> UpdateType.EditedMessage
+                channelPost != null -> UpdateType.ChannelPost
+                editedChannelPost != null -> UpdateType.EditedChannelPost
+                callbackQuery != null -> UpdateType.CallbackQuery
+                pollAnswer != null -> UpdateType.PollAnswer
+                myChatMember != null -> UpdateType.MyChatMember
+                chatMember != null -> UpdateType.ChatMember
+                chatJoinRequest != null -> UpdateType.ChatJoinRequest
+                messageReaction != null -> UpdateType.MessageReaction
+                chatBoost != null -> UpdateType.ChatBoost
+                removedChatBoost != null -> UpdateType.RemovedChatBoost
+                poll != null -> UpdateType.Poll
 
                 else -> UpdateType.Unknown
             }

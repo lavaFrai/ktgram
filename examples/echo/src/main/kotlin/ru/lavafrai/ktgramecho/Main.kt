@@ -2,10 +2,10 @@ package ru.lavafrai.ktgramecho
 
 import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
-import ru.lavafrai.ktgram.dispatcher.filter
+import ru.lavafrai.ktgram.dispatcher.text
 
 fun Dispatcher.addHandlers() {
-    filter({ update -> update.message != null }) {
+    text {
         println(update.message!!.reply("You said: ${update.message!!.text}"))
     }
 }
