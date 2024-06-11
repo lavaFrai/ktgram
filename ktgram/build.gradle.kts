@@ -8,6 +8,7 @@ plugins {
     id("maven-publish")
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.serialization") version "2.0.0"
+    id("com.goncalossilva.resources") version "0.4.1"
 }
 
 group = "ru.lavafrai.ktgram"
@@ -20,9 +21,11 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.goncalossilva:resources:0.4.1")
 
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
+    implementation("ru.gildor.coroutines:kotlin-coroutines-okhttp:1.0")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")

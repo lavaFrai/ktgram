@@ -3,11 +3,15 @@ package ru.lavafrai.ktgram.client
 import ReplyParameters
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import okhttp3.Request
 import org.slf4j.LoggerFactory
+import ru.gildor.coroutines.okhttp.await
 import ru.lavafrai.ktgram.client.eventProvider.UpdateProvider
 import ru.lavafrai.ktgram.client.service.TelegramApiService
+import ru.lavafrai.ktgram.client.service.getClient
 import ru.lavafrai.ktgram.client.service.productionTelegramApiService
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
+import ru.lavafrai.ktgram.exceptions.KtgramExceptions
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.MessageEntity
@@ -94,6 +98,19 @@ class Bot (
         return api.getMe()
     }
 
+    suspend fun downloadFileToBytes(fileId: String): ByteArray {
+        val file = getFile(fileId)
+
+        val client = service.getClient()
+        val request = Request.Builder()
+            .url("https://api.telegram.org/file/bot$token/${file.filePath}")
+            .get()
+            .build()
+
+        val response = client.newCall(request).await()
+        return response.body()!!.bytes()
+    }
+
     /**
      * Use this method to send text messages. On success, the sent Message is returned.
      */
@@ -113,6 +130,11 @@ class Bot (
     ) = api.sendMessage(
         chatId, text, businessConnectionId, messageThreadId, parseMode, entities, linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
+
+    /**
+     * Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
+     */
+    suspend fun getFile(fileId: String) = api.getFile(fileId)
 
     /**
      * Use this method to forward messages of any kind. Service messages and messages with protected content can't be forwarded. On success, the sent Message is returned.
@@ -191,5 +213,6 @@ class Bot (
     ) = api.sendPhoto(
         chatId, photo, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
+
 
 }

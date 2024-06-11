@@ -3,7 +3,9 @@ package ru.lavafrai.ktgram.client
 import ReplyParameters
 import retrofit2.http.Field
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import ru.lavafrai.ktgram.client.service.TelegramApiService
+import ru.lavafrai.ktgram.client.service.getClient
 import ru.lavafrai.ktgram.types.ReplyMarkup
 import ru.lavafrai.ktgram.types.User
 import ru.lavafrai.ktgram.types.getResult
@@ -15,6 +17,9 @@ class TelegramApi(
     private val bot: Bot,
     private val service: TelegramApiService
 ) {
+    val client: OkHttpClient
+        get() = service.getClient()
+
     suspend fun getMe(): User = service.getMe().getResult(bot)
 
     suspend fun getUpdates(
@@ -42,6 +47,8 @@ class TelegramApi(
     ) = service.sendMessage(
         businessConnectionId, chatId, messageThreadId, text, parseMode, entities, linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     ).getResult(bot)
+
+    suspend fun getFile(fileId: String) = service.getFile(fileId).getResult(bot)
 
     suspend fun forwardMessage(
         chatId: Int,
@@ -109,7 +116,7 @@ class TelegramApi(
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo.getMultiPartBodyPart(), caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+    ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo.getMultiPartBodyPart("photo"), caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendPhoto(
         chatId: Int,

@@ -9,14 +9,14 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.types.*
+import ru.lavafrai.ktgram.types.media.File
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toJavaDuration
 
 
 interface TelegramApiService {
@@ -47,6 +47,12 @@ interface TelegramApiService {
         @Field("reply_parameters") replyParameters: ReplyParameters?,
         @Field("reply_markup") replyMarkup: ReplyMarkup?,
     ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("getFile")
+    suspend fun getFile(
+        @Field("file_id") fileId: String
+    ): TelegramResult<File>
 
     @FormUrlEncoded
     @POST("forwardMessage")
@@ -105,7 +111,7 @@ interface TelegramApiService {
         @Part("business_connection_id") businessConnectionId: String?,
         @Part("chat_id") chatId: Int,
         @Part("message_thread_id") messageThreadId: Int?,
-        @Part("photo") photo: MultipartBody.Part,
+        @Part photo: MultipartBody.Part,
         @Part("caption") caption: String?,
         @Part("parse_mode") parseMode: String?,
         @Part("caption_entities") captionEntities: List<MessageEntity>?,
@@ -154,14 +160,19 @@ class TgInterceptor: Interceptor {
 }
 
 
+val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+    .addInterceptor(TgInterceptor())
+    .callTimeout(10.minutes.toJavaDuration())
+    .readTimeout(10.minutes.toJavaDuration())
+    .writeTimeout(10.minutes.toJavaDuration())
+    .build()
+
 fun productionTelegramApiService(token: String): TelegramApiService {
     val tolerantJson = Json {
         ignoreUnknownKeys = true
     }
 
-    val client = OkHttpClient.Builder()
-        .addInterceptor(TgInterceptor())
-        .build()
+    val client = okHttpClient
 
     return Retrofit.Builder()
         .client(client)
@@ -169,4 +180,8 @@ fun productionTelegramApiService(token: String): TelegramApiService {
         .addConverterFactory(tolerantJson.asConverterFactory(MediaType.get("application/json")))
         .build()
         .create(TelegramApiService::class.java)
+}
+
+fun TelegramApiService.getClient(): OkHttpClient {
+    return okHttpClient
 }

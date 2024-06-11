@@ -36,7 +36,18 @@ fun Dispatcher.messageFilter(vararg filters: Filter, handle: suspend MessageHand
 }
 
 fun Dispatcher.text(vararg filters: Filter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
-    val handler = MessageFilterHandler(*filters, handler=handle)
+    val filtersList = filters.toMutableList()
+    filtersList.add { update -> update.message?.type == MessageType.Text }
+
+    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle)
+    addHandler(handler)
+}
+
+fun Dispatcher.photo(vararg filters: Filter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
+    val filtersList = filters.toMutableList()
+    filtersList.add { update -> update.message?.type == MessageType.Photo }
+
+    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle)
     addHandler(handler)
 }
 
