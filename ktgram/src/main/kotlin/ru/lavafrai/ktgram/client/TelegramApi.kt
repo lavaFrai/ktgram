@@ -1,7 +1,6 @@
 package ru.lavafrai.ktgram.client
 
 import ReplyParameters
-import retrofit2.http.Field
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.types.ReplyMarkup
 import ru.lavafrai.ktgram.types.User
