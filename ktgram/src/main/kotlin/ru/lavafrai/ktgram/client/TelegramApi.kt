@@ -1,10 +1,12 @@
 package ru.lavafrai.ktgram.client
 
 import ReplyParameters
+import okhttp3.MultipartBody
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.types.ReplyMarkup
 import ru.lavafrai.ktgram.types.User
 import ru.lavafrai.ktgram.types.getResult
+import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
 
@@ -90,6 +92,40 @@ class TelegramApi(
     ) = service.copyMessages(
         chatId, messageThreadId, fromChatId, messageIds, disableNotification, protectContent, removeCaption
     ).getResult()
+
+    suspend fun sendPhoto(
+        chatId: Int,
+        photo: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo.getMultiPartBodyPart(), caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun sendPhoto(
+        chatId: Int,
+        photo: String,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 }
 
 fun getAllUpdates() = listOf(

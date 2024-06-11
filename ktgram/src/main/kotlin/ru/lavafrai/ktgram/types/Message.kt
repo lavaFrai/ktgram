@@ -26,6 +26,7 @@ import ru.lavafrai.ktgram.types.poll.Poll
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.lavafrai.ktgram.types.inputfile.InputFile
 
 /**
  * This object represents a message.
@@ -241,6 +242,114 @@ class Message(
             replyMarkup = replyMarkup,
 
             replyParameters = ReplyParameters(messageId = this.messageId),
+        )
+    }
+
+    suspend fun answerPhoto(
+        photo: InputFile,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendPhoto(
+            chat.id,
+            photo,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun answerPhoto(
+        photo: String,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendPhoto(
+            chat.id,
+            photo,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyPhoto(
+        photo: InputFile,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendPhoto(
+            chat.id,
+            photo,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun replyPhoto(
+        photo: String,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendPhoto(
+            chat.id,
+            photo,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
         )
     }
 

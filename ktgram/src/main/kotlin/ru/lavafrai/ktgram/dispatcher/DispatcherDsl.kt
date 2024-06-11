@@ -35,7 +35,8 @@ fun Dispatcher.messageFilter(vararg filters: Filter, handle: suspend MessageHand
     addHandler(handler)
 }
 
-fun Dispatcher.text(handle: suspend MessageHandlerEnvironment.() -> Unit) {
-    val handler = TextMessageHandler(handle, this)
+fun Dispatcher.text(vararg filters: Filter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
+    val handler = MessageFilterHandler(*filters, handler=handle)
     addHandler(handler)
 }
+

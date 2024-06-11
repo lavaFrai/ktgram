@@ -9,6 +9,7 @@ import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.client.service.productionTelegramApiService
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
 import ru.lavafrai.ktgram.types.*
+import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.utils.extractBotId
 import ru.lavafrai.ktgram.utils.validateToken
@@ -146,4 +147,49 @@ class Bot (
     ) = api.copyMessage(
         chatId, messageThreadId, fromChatId, messageId, caption, parseMode, captionEntities, showCaptionAboveMedia, disableNotification, protectContent, replyParameters, replyMarkup
     )
+
+    /**
+     * Use this method to send photos. On success, the sent Message is returned.
+     */
+    suspend fun sendPhoto(
+        chatId: Int,
+        photo: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendPhoto(
+        chatId, photo, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
+
+    /**
+     * Use this method to send photos by url or file id as string. On success, the sent Message is returned.
+     */
+    suspend fun sendPhoto(
+        chatId: Int,
+        photo: String,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendPhoto(
+        chatId, photo, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
+
 }

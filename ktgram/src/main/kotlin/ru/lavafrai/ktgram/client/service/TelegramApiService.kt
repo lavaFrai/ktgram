@@ -2,16 +2,14 @@ package ru.lavafrai.ktgram.client.service
 
 import ReplyParameters
 import de.jensklingenberg.ktorfit.Ktorfit
-import de.jensklingenberg.ktorfit.http.Field
-import de.jensklingenberg.ktorfit.http.FormUrlEncoded
-import de.jensklingenberg.ktorfit.http.POST
-import de.jensklingenberg.ktorfit.http.Query
+import de.jensklingenberg.ktorfit.http.*
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
+import okhttp3.MultipartBody
 import okhttp3.Response
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.types.*
@@ -98,6 +96,44 @@ interface TelegramApiService {
         @Field("protect_content") protectContent: Boolean? = null,
         @Field("remove_caption") removeCaption: Boolean? = null,
     ): TelegramResult<List<Int>>
+
+    @Multipart
+    @POST("sendPhoto")
+    suspend fun sendPhoto(
+        @Part("business_connection_id") businessConnectionId: String?,
+        @Part("chat_id") chatId: Int,
+        @Part("message_thread_id") messageThreadId: Int?,
+        @Part("photo") photo: MultipartBody.Part,
+        @Part("caption") caption: String?,
+        @Part("parse_mode") parseMode: String?,
+        @Part("caption_entities") captionEntities: List<MessageEntity>?,
+        @Part("show_caption_above_media") showCaptionAboveMedia: Boolean?,
+        @Part("has_spoiler") hasSpoiler: Boolean?,
+        @Part("disable_notification") disableNotification: Boolean?,
+        @Part("protect_content") protectContent: Boolean?,
+        @Part("message_effect_id") messageEffectId: String?,
+        @Part("reply_parameters") replyParameters: ReplyParameters?,
+        @Part("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("sendPhoto")
+    suspend fun sendPhoto(
+        @Field("business_connection_id") businessConnectionId: String?,
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int?,
+        @Field("photo") photo: String,
+        @Field("caption") caption: String?,
+        @Field("parse_mode") parseMode: String?,
+        @Field("caption_entities") captionEntities: List<MessageEntity>?,
+        @Field("show_caption_above_media") showCaptionAboveMedia: Boolean?,
+        @Field("has_spoiler") hasSpoiler: Boolean?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
 }
 
 const val PRODUCTION = "https://api.telegram.org/bot{token}/"
