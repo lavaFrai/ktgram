@@ -271,32 +271,6 @@ class Message(
         )
     }
 
-    suspend fun answerPhoto(
-        photo: String,
-        caption: String? = null,
-        parseMode: String? = null,
-        captionEntities: List<MessageEntity>? = null,
-        showCaptionAboveMedia: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message {
-        return bot.sendPhoto(
-            chat.id,
-            photo,
-            messageThreadId = messageThreadId,
-            caption = caption,
-            parseMode = parseMode,
-            captionEntities = captionEntities,
-            showCaptionAboveMedia = showCaptionAboveMedia,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            messageEffectId = messageEffectId,
-            replyMarkup = replyMarkup,
-        )
-    }
-
     suspend fun replyPhoto(
         photo: InputFile,
         caption: String? = null,
@@ -325,25 +299,377 @@ class Message(
         )
     }
 
-    suspend fun replyPhoto(
-        photo: String,
+    suspend fun answerAudio(
+        audio: InputFile,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
-        showCaptionAboveMedia: Boolean? = null,
+        duration: Int? = null,
+        performer: String? = null,
+        title: String? = null,
+        thumbnail: InputFile? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message {
-        return bot.sendPhoto(
+        return bot.sendAudio(
             chat.id,
-            photo,
+            audio,
             messageThreadId = messageThreadId,
             caption = caption,
             parseMode = parseMode,
             captionEntities = captionEntities,
+            duration = duration,
+            performer = performer,
+            title = title,
+            thumbnail = thumbnail,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyAudio(
+        audio: InputFile,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        performer: String? = null,
+        title: String? = null,
+        thumbnail: InputFile? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendAudio(
+            chat.id,
+            audio,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            duration = duration,
+            performer = performer,
+            title = title,
+            thumbnail = thumbnail,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerDocument(
+        document: InputFile,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        disableContentTypeDetection: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendDocument(
+            chat.id,
+            document,
+            messageThreadId = messageThreadId,
+            thumbnail = thumbnail,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            disableContentTypeDetection = disableContentTypeDetection,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyDocument(
+        document: InputFile,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        disableContentTypeDetection: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendDocument(
+            chat.id,
+            document,
+            messageThreadId = messageThreadId,
+            thumbnail = thumbnail,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            disableContentTypeDetection = disableContentTypeDetection,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerVideo(
+        video: InputFile,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        supportsStreaming: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendVideo(
+            chat.id,
+            video,
+            messageThreadId = messageThreadId,
+            duration = duration,
+            width = width,
+            height = height,
+            thumbnail = thumbnail,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
             showCaptionAboveMedia = showCaptionAboveMedia,
+            hasSpoiler = hasSpoiler,
+            supportsStreaming = supportsStreaming,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyVideo(
+        video: InputFile,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        supportsStreaming: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendVideo(
+            chat.id,
+            video,
+            messageThreadId = messageThreadId,
+            duration = duration,
+            width = width,
+            height = height,
+            thumbnail = thumbnail,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            hasSpoiler = hasSpoiler,
+            supportsStreaming = supportsStreaming,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerAnimation(
+        animation: InputFile,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendAnimation(
+            chat.id,
+            animation,
+            messageThreadId = messageThreadId,
+            duration = duration,
+            width = width,
+            height = height,
+            thumbnail = thumbnail,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            hasSpoiler = hasSpoiler,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyAnimation(
+        animation: InputFile,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendAnimation(
+            chat.id,
+            animation,
+            messageThreadId = messageThreadId,
+            duration = duration,
+            width = width,
+            height = height,
+            thumbnail = thumbnail,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            hasSpoiler = hasSpoiler,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerVoice(
+        voice: InputFile,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendVoice(
+            chat.id,
+            voice,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            duration = duration,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyVoice(
+        voice: InputFile,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendVoice(
+            chat.id,
+            voice,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            duration = duration,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerVideoNote(
+        videoNote: InputFile,
+        duration: Int? = null,
+        length: Int? = null,
+        thumbnail: InputFile? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendVideoNote(
+            chat.id,
+            videoNote,
+            messageThreadId = messageThreadId,
+            duration = duration,
+            length = length,
+            thumbnail = thumbnail,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyVideoNote(
+        videoNote: InputFile,
+        duration: Int? = null,
+        length: Int? = null,
+        thumbnail: InputFile? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message {
+        return bot.sendVideoNote(
+            chat.id,
+            videoNote,
+            messageThreadId = messageThreadId,
+            duration = duration,
+            length = length,
+            thumbnail = thumbnail,
             disableNotification = disableNotification,
             protectContent = protectContent,
             messageEffectId = messageEffectId,

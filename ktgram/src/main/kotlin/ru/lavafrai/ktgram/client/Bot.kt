@@ -195,6 +195,7 @@ class Bot (
     /**
      * Use this method to send photos by url or file id as string. On success, the sent Message is returned.
      */
+    @Deprecated("Use sendPhoto with InputFile instead")
     suspend fun sendPhoto(
         chatId: Int,
         photo: String,
@@ -214,5 +215,145 @@ class Bot (
         chatId, photo, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
+    /**
+     * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
+     *
+     * For sending voice messages, use the sendVoice method instead.
+     */
+    suspend fun sendAudio(
+        chatId: Int,
+        audio: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        performer: String? = null,
+        title: String? = null,
+        thumbnail: InputFile? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendAudio(
+        chatId, audio, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, duration, performer, title, thumbnail, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
 
+    /**
+     * Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
+     */
+    suspend fun sendDocument(
+        chatId: Int,
+        document: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        disableContentTypeDetection: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendDocument(
+        chatId, document, businessConnectionId, messageThreadId, thumbnail, caption, parseMode, captionEntities, disableContentTypeDetection, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
+
+    /**
+     * Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+     */
+    suspend fun sendVideo(
+        chatId: Int,
+        video: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        supportsStreaming: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendVideo(
+        chatId, video, businessConnectionId, messageThreadId, duration, width, height, thumbnail, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, supportsStreaming, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
+
+    /**
+     * Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
+     */
+    suspend fun sendAnimation(
+        chatId: Int,
+        animation: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendAnimation(
+        chatId, animation, businessConnectionId, messageThreadId, duration, width, height, thumbnail, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
+
+    /**
+     * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or in .MP3 format, or in .M4A format (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
+     */
+    suspend fun sendVoice(
+        chatId: Int,
+        voice: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = default.parseMode,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendVoice(
+        chatId, voice, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, duration, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
+
+    /**
+     * As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.
+     */
+    suspend fun sendVideoNote(
+        chatId: Int,
+        videoNote: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        duration: Int? = null,
+        length: Int? = null,
+        thumbnail: InputFile? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendVideoNote(
+        chatId, videoNote, businessConnectionId, messageThreadId, duration, length, thumbnail, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+    )
 }

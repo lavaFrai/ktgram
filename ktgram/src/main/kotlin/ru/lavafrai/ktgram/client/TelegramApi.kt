@@ -118,6 +118,7 @@ class TelegramApi(
         replyMarkup: ReplyMarkup? = null,
     ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo.getMultiPartBodyPart("photo"), caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
+    @Deprecated("Use sendPhoto with InputFile instead")
     suspend fun sendPhoto(
         chatId: Int,
         photo: String,
@@ -134,6 +135,116 @@ class TelegramApi(
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun sendAudio(
+        chatId: Int,
+        audio: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        performer: String? = null,
+        title: String? = null,
+        thumbnail: InputFile? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendAudio(businessConnectionId, chatId, messageThreadId, audio.getMultiPartBodyPart("audio"), caption, parseMode, captionEntities, duration, performer, title, thumbnail?.getMultiPartBodyPart("thumb"), disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun sendDocument(
+        chatId: Int,
+        document: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        disableContentTypeDetection: Boolean? = false,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendDocument(businessConnectionId, chatId, messageThreadId, document.getMultiPartBodyPart("document"), thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities, disableContentTypeDetection, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun sendVideo(
+        chatId: Int,
+        video: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        supportsStreaming: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendVideo(businessConnectionId, chatId, messageThreadId, video.getMultiPartBodyPart("video"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, supportsStreaming, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun sendAnimation(
+        chatId: Int,
+        animation: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        duration: Int? = null,
+        width: Int? = null,
+        height: Int? = null,
+        thumbnail: InputFile? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendAnimation(businessConnectionId, chatId, messageThreadId, animation.getMultiPartBodyPart("animation"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun sendVoice(
+        chatId: Int,
+        voice: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendVoice(businessConnectionId, chatId, messageThreadId, voice.getMultiPartBodyPart("voice"), caption, parseMode, captionEntities, duration, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun sendVideoNote(
+        chatId: Int,
+        videoNote: InputFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        duration: Int? = null,
+        length: Int? = null,
+        thumbnail: InputFile? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendVideoNote(businessConnectionId, chatId, messageThreadId, videoNote.getMultiPartBodyPart("video_note"), duration, length, thumbnail?.getMultiPartBodyPart("thumb"), disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 }
 
 fun getAllUpdates() = listOf(

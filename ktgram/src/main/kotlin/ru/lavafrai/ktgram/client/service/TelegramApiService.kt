@@ -142,6 +142,250 @@ interface TelegramApiService {
         @Field("reply_parameters") replyParameters: ReplyParameters?,
         @Field("reply_markup") replyMarkup: ReplyMarkup?,
     ): TelegramResult<Message>
+
+    @Multipart
+    @POST("sendAudio")
+    suspend fun sendAudio(
+        @Part("business_connection_id") businessConnectionId: String?,
+        @Part("chat_id") chatId: Int,
+        @Part("message_thread_id") messageThreadId: Int?,
+        @Part audio: MultipartBody.Part,
+        @Part("caption") caption: String?,
+        @Part("parse_mode") parseMode: String?,
+        @Part("caption_entities") captionEntities: List<MessageEntity>?,
+        @Part("duration") duration: Int?,
+        @Part("performer") performer: String?,
+        @Part("title") title: String?,
+        @Part thumbnail: MultipartBody.Part?,
+        @Part("disable_notification") disableNotification: Boolean?,
+        @Part("protect_content") protectContent: Boolean?,
+        @Part("message_effect_id") messageEffectId: String?,
+        @Part("reply_parameters") replyParameters: ReplyParameters?,
+        @Part("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("sendAudio")
+    suspend fun sendAudio(
+        @Field("business_connection_id") businessConnectionId: String?,
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int?,
+        @Field("audio") audio: String,
+        @Field("caption") caption: String?,
+        @Field("parse_mode") parseMode: String?,
+        @Field("caption_entities") captionEntities: List<MessageEntity>?,
+        @Field("duration") duration: Int?,
+        @Field("performer") performer: String?,
+        @Field("title") title: String?,
+        @Field("thumbnail") thumbnail: String?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @Multipart
+    @POST("sendDocument")
+    suspend fun sendDocument(
+        @Part("business_connection_id") businessConnectionId: String?,
+        @Part("chat_id") chatId: Int,
+        @Part("message_thread_id") messageThreadId: Int?,
+        @Part document: MultipartBody.Part,
+        @Part thumbnail: MultipartBody.Part?,
+        @Part("caption") caption: String?,
+        @Part("parse_mode") parseMode: String?,
+        @Part("caption_entities") captionEntities: List<MessageEntity>?,
+        @Part("disable_content_type_detection") disableContentTypeDetection: Boolean?,
+        @Part("disable_notification") disableNotification: Boolean?,
+        @Part("protect_content") protectContent: Boolean?,
+        @Part("message_effect_id") messageEffectId: String?,
+        @Part("reply_parameters") replyParameters: ReplyParameters?,
+        @Part("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("sendDocument")
+    suspend fun sendDocument(
+        @Field("business_connection_id") businessConnectionId: String?,
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int?,
+        @Field("document") document: String,
+        @Field("thumbnail") thumbnail: String?,
+        @Field("caption") caption: String?,
+        @Field("parse_mode") parseMode: String?,
+        @Field("caption_entities") captionEntities: List<MessageEntity>?,
+        @Field("disable_content_type_detection") disableContentTypeDetection: Boolean?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @Multipart
+    @POST("sendVideo")
+    suspend fun sendVideo(
+        @Part("business_connection_id") businessConnectionId: String?,
+        @Part("chat_id") chatId: Int,
+        @Part("message_thread_id") messageThreadId: Int?,
+        @Part video: MultipartBody.Part,
+        @Part("duration") duration: Int?,
+        @Part("width") width: Int?,
+        @Part("height") height: Int?,
+        @Part thumbnail: MultipartBody.Part?,
+        @Part("caption") caption: String?,
+        @Part("parse_mode") parseMode: String?,
+        @Part("caption_entities") captionEntities: List<MessageEntity>?,
+        @Part("show_caption_above_media") showCaptionAboveMedia: Boolean?,
+        @Part("has_spoiler") hasSpoiler: Boolean?,
+        @Part("supports_streaming") supportsStreaming: Boolean?,
+        @Part("disable_notification") disableNotification: Boolean?,
+        @Part("protect_content") protectContent: Boolean?,
+        @Part("message_effect_id") messageEffectId: String?,
+        @Part("reply_parameters") replyParameters: ReplyParameters?,
+        @Part("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("sendVideo")
+    suspend fun sendVideo(
+        @Field("business_connection_id") businessConnectionId: String?,
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int?,
+        @Field("video") video: String,
+        @Field("duration") duration: Int?,
+        @Field("width") width: Int?,
+        @Field("height") height: Int?,
+        @Field("thumbnail") thumbnail: String?,
+        @Field("caption") caption: String?,
+        @Field("parse_mode") parseMode: String?,
+        @Field("caption_entities") captionEntities: List<MessageEntity>?,
+        @Field("show_caption_above_media") showCaptionAboveMedia: Boolean?,
+        @Field("has_spoiler") hasSpoiler: Boolean?,
+        @Field("supports_streaming") supportsStreaming: Boolean?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @Multipart
+    @POST("sendAnimation")
+    suspend fun sendAnimation(
+        @Part("business_connection_id") businessConnectionId: String?,
+        @Part("chat_id") chatId: Int,
+        @Part("message_thread_id") messageThreadId: Int?,
+        @Part animation: MultipartBody.Part,
+        @Part("duration") duration: Int?,
+        @Part("width") width: Int?,
+        @Part("height") height: Int?,
+        @Part thumbnail: MultipartBody.Part?,
+        @Part("caption") caption: String?,
+        @Part("parse_mode") parseMode: String?,
+        @Part("caption_entities") captionEntities: List<MessageEntity>?,
+        @Part("show_caption_above_media") showCaptionAboveMedia: Boolean?,
+        @Part("has_spoiler") hasSpoiler: Boolean?,
+        @Part("disable_notification") disableNotification: Boolean?,
+        @Part("protect_content") protectContent: Boolean?,
+        @Part("message_effect_id") messageEffectId: String?,
+        @Part("reply_parameters") replyParameters: ReplyParameters?,
+        @Part("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("sendAnimation")
+    suspend fun sendAnimation(
+        @Field("business_connection_id") businessConnectionId: String?,
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int?,
+        @Field("animation") animation: String,
+        @Field("duration") duration: Int?,
+        @Field("width") width: Int?,
+        @Field("height") height: Int?,
+        @Field("thumbnail") thumbnail: String?,
+        @Field("caption") caption: String?,
+        @Field("parse_mode") parseMode: String?,
+        @Field("caption_entities") captionEntities: List<MessageEntity>?,
+        @Field("show_caption_above_media") showCaptionAboveMedia: Boolean?,
+        @Field("has_spoiler") hasSpoiler: Boolean?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @Multipart
+    @POST("sendVoice")
+    suspend fun sendVoice(
+        @Part("business_connection_id") businessConnectionId: String?,
+        @Part("chat_id") chatId: Int,
+        @Part("message_thread_id") messageThreadId: Int?,
+        @Part voice: MultipartBody.Part,
+        @Part("caption") caption: String?,
+        @Part("parse_mode") parseMode: String?,
+        @Part("caption_entities") captionEntities: List<MessageEntity>?,
+        @Part("duration") duration: Int?,
+        @Part("disable_notification") disableNotification: Boolean?,
+        @Part("protect_content") protectContent: Boolean?,
+        @Part("message_effect_id") messageEffectId: String?,
+        @Part("reply_parameters") replyParameters: ReplyParameters?,
+        @Part("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("sendVoice")
+    suspend fun sendVoice(
+        @Field("business_connection_id") businessConnectionId: String?,
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int?,
+        @Field("voice") voice: String,
+        @Field("caption") caption: String?,
+        @Field("parse_mode") parseMode: String?,
+        @Field("caption_entities") captionEntities: List<MessageEntity>?,
+        @Field("duration") duration: Int?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @Multipart
+    @POST("sendVideoNote")
+    suspend fun sendVideoNote(
+        @Part("business_connection_id") businessConnectionId: String?,
+        @Part("chat_id") chatId: Int,
+        @Part("message_thread_id") messageThreadId: Int?,
+        @Part videoNote: MultipartBody.Part,
+        @Part("duration") duration: Int?,
+        @Part("length") length: Int?,
+        @Part thumbnail: MultipartBody.Part?,
+        @Part("disable_notification") disableNotification: Boolean?,
+        @Part("protect_content") protectContent: Boolean?,
+        @Part("message_effect_id") messageEffectId: String?,
+        @Part("reply_parameters") replyParameters: ReplyParameters?,
+        @Part("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("sendVideoNote")
+    suspend fun sendVideoNote(
+        @Field("business_connection_id") businessConnectionId: String?,
+        @Field("chat_id") chatId: Int,
+        @Field("message_thread_id") messageThreadId: Int?,
+        @Field("video_note") videoNote: String,
+        @Field("duration") duration: Int?,
+        @Field("length") length: Int?,
+        @Field("thumbnail") thumbnail: String?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
 }
 
 const val PRODUCTION = "https://api.telegram.org/bot{token}/"
