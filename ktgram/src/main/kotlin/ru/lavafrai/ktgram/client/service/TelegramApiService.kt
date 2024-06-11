@@ -1,16 +1,18 @@
 package ru.lavafrai.ktgram.client.service
 
 import ReplyParameters
-import de.jensklingenberg.ktorfit.Ktorfit
-import de.jensklingenberg.ktorfit.http.*
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MultipartBody
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
 import okhttp3.Response
+import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
+import retrofit2.http.Query
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
@@ -143,8 +145,8 @@ class TgInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response: Response = chain.proceed(request)
-        if (response.code == 400) {
-            throw TelegramBadRequest(response.body?.string() ?: "")
+        if (response.code() == 400) {
+            throw TelegramBadRequest(response.body()?.string() ?: "")
         }
 
         return response
@@ -157,19 +159,14 @@ fun productionTelegramApiService(token: String): TelegramApiService {
         ignoreUnknownKeys = true
     }
 
-    val client = HttpClient(OkHttp) {
-        install(ContentNegotiation) {
-            json(json = tolerantJson)
-        }
-
-        engine {
-            addInterceptor(TgInterceptor())
-        }
-    }
-
-    return Ktorfit.Builder()
-        .httpClient(client)
-        .baseUrl(PRODUCTION.replace("{token}", token))
+    val client = OkHttpClient.Builder()
+        .addInterceptor(TgInterceptor())
         .build()
-        .createTelegramApiService()
+
+    return Retrofit.Builder()
+        .client(client)
+        .baseUrl(PRODUCTION.replace("{token}", token))
+        .addConverterFactory(tolerantJson.asConverterFactory(MediaType.get("application/json")))
+        .build()
+        .create(TelegramApiService::class.java)
 }

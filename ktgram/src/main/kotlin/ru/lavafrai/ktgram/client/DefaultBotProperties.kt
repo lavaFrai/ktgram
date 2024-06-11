@@ -1,5 +1,6 @@
 package ru.lavafrai.ktgram.client
 
+import okio.Timeout
 
 class DefaultBotProperties(
     val parseMode: String?=null,
