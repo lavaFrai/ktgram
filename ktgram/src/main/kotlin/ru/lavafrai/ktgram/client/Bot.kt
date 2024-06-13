@@ -1,20 +1,20 @@
 package ru.lavafrai.ktgram.client
 
+import ReactionType
 import ReplyParameters
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import okhttp3.Request
 import org.slf4j.LoggerFactory
 import ru.gildor.coroutines.okhttp.await
-import ru.lavafrai.ktgram.client.eventProvider.UpdateProvider
+import ru.lavafrai.ktgram.client.updateProvider.UpdateProvider
 import ru.lavafrai.ktgram.client.service.TelegramApiService
-import ru.lavafrai.ktgram.client.service.getClient
-import ru.lavafrai.ktgram.client.service.productionTelegramApiService
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
-import ru.lavafrai.ktgram.exceptions.KtgramExceptions
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.MessageEntity
+import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
+import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.utils.extractBotId
 import ru.lavafrai.ktgram.utils.validateToken
 import java.util.concurrent.atomic.AtomicBoolean
@@ -26,7 +26,6 @@ class Bot (
 ) {
     private val stopSignal = AtomicBoolean(false)
     private val _token: String
-    private var service: TelegramApiService
     private var default: DefaultBotProperties
     val api: TelegramApi
     private lateinit var me: User
@@ -39,9 +38,8 @@ class Bot (
         validateToken(token)
 
         this._token = token
-        this.service = session ?: productionTelegramApiService(token)
         this.default = default ?: DefaultBotProperties()
-        this.api = TelegramApi(this, service)
+        this.api = TelegramApi(this)
         this.updateFlow = UpdateProvider(this, this.default.timeout, stopSignal).getUpdatesFlow()
     }
 
@@ -101,7 +99,7 @@ class Bot (
     suspend fun downloadFileToBytes(fileId: String): ByteArray {
         val file = getFile(fileId)
 
-        val client = service.getClient()
+        val client = api.client
         val request = Request.Builder()
             .url("https://api.telegram.org/file/bot$token/${file.filePath}")
             .get()
@@ -176,29 +174,6 @@ class Bot (
     suspend fun sendPhoto(
         chatId: Int,
         photo: InputFile,
-        businessConnectionId: String? = null,
-        messageThreadId: Int? = null,
-        caption: String? = null,
-        parseMode: String? = default.parseMode,
-        captionEntities: List<MessageEntity>? = null,
-        showCaptionAboveMedia: Boolean? = null,
-        hasSpoiler: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        messageEffectId: String? = null,
-        replyParameters: ReplyParameters? = null,
-        replyMarkup: ReplyMarkup? = null,
-    ) = api.sendPhoto(
-        chatId, photo, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
-    )
-
-    /**
-     * Use this method to send photos by url or file id as string. On success, the sent Message is returned.
-     */
-    @Deprecated("Use sendPhoto with InputFile instead")
-    suspend fun sendPhoto(
-        chatId: Int,
-        photo: String,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         caption: String? = null,
@@ -356,4 +331,140 @@ class Bot (
     ) = api.sendVideoNote(
         chatId, videoNote, businessConnectionId, messageThreadId, duration, length, thumbnail, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
+
+    /**
+     * Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned.
+     */
+    suspend fun sendMediaGroup(
+        chatId: Int,
+        media: List<InputMedia>,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+    ) = api.sendMediaGroup(
+        chatId, media, businessConnectionId, messageThreadId, disableNotification, protectContent, messageEffectId, replyParameters,
+    )
+
+    /**
+     * Use this method to send point on the map. On success, the sent Message is returned.
+     */
+    suspend fun sendLocation(
+        chatId: Int,
+        latitude: Float,
+        longitude: Float,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        horizontalAccuracy: Float? = null,
+        livePeriod: Int? = null,
+        heading: Int? = null,
+        proximityAlertRadius: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendLocation(chatId, latitude, longitude, businessConnectionId, messageThreadId, horizontalAccuracy, livePeriod, heading, proximityAlertRadius, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
+
+    /**
+     * Use this method to send information about a venue. On success, the sent Message is returned.
+     */
+    suspend fun sendVenue(
+        chatId: Int,
+        latitude: Float,
+        longitude: Float,
+        title: String,
+        address: String,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        foursquareId: String? = null,
+        foursquareType: String? = null,
+        googlePlaceId: String? = null,
+        googlePlaceType: String? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendVenue(chatId, latitude, longitude, title, address, businessConnectionId, messageThreadId, foursquareId, foursquareType, googlePlaceId, googlePlaceType, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
+
+    /**
+     * Use this method to send phone contacts. On success, the sent Message is returned.
+     */
+    suspend fun sendContact(
+        chatId: Int,
+        phoneNumber: String,
+        firstName: String,
+        lastName: String? = null,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        vcard: String? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendContact(chatId, phoneNumber, firstName, lastName, businessConnectionId, messageThreadId, vcard, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
+
+    /**
+     * Use this method to send a native poll. On success, the sent Message is returned.
+     */
+    suspend fun sendPoll(
+        chatId: Int,
+        question: String,
+        options: List<InputPollOption>,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        questionParseMode: String? = null,
+        questionEntities: List<MessageEntity>? = null,
+        isAnonymous: Boolean? = null,
+        type: String? = null,
+        allowsMultipleAnswers: Boolean? = null,
+        correctOptionId: Int? = null,
+        explanation: String? = null,
+        explanationParseMode: String? = null,
+        explanationEntities: List<MessageEntity>? = null,
+        openPeriod: Int? = null,
+        closeDate: Int? = null,
+        isClosed: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendPoll(chatId, question, options, businessConnectionId, messageThreadId, questionParseMode, questionEntities, isAnonymous, type, allowsMultipleAnswers, correctOptionId, explanation, explanationParseMode, explanationEntities, openPeriod, closeDate, isClosed, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
+
+    /**
+     * Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned.
+     */
+    suspend fun sendDice(
+        chatId: Int,
+        emoji: String? = null,
+        businessConnectionId: String? = null,
+        messageThreadId: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendDice(chatId, emoji, businessConnectionId, messageThreadId, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
+
+    /**
+     * Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
+     */
+    suspend fun sendChatAction(
+        chatId: Int,
+        action: String,
+    ) = api.sendChatAction(chatId, action)
+
+    /**
+     * Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.
+     */
+    suspend fun setMessageReaction(
+        chatId: Int,
+        messageId: Int,
+        reactions: List<ReactionType>,
+    ) = api.setMessageReaction(chatId, messageId, reactions)
 }

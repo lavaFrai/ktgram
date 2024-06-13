@@ -1,4 +1,4 @@
-package ru.lavafrai.ktgram.client.eventProvider
+package ru.lavafrai.ktgram.client.updateProvider
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,7 +12,7 @@ class UpdateProvider(private val bot: Bot, private val timeout: Int = 5, val sto
     fun getUpdatesFlow(): Flow<Update> {
         return flow {
             while (!stopSignal.get()) {
-                val update = bot.api.getUpdates(offset = lastUpdate, limit = 1, timeout = 5).firstOrNull()
+                val update = bot.api.getUpdates(offset = lastUpdate, limit = 1, timeout = 30).firstOrNull()
                 update?.let {
                     lastUpdate = it.updateId + 1
                     emit(it)

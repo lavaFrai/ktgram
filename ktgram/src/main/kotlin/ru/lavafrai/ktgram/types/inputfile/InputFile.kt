@@ -9,7 +9,7 @@ import ru.lavafrai.ktgram.types.TelegramObject
  *   This object represents the contents of a file to be uploaded. Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.
  */
 @Serializable
-abstract class InputFile(val filename: String? = null): TelegramObject() {
+abstract class InputFile(val filename: String = "unnamedFile"): TelegramObject() {
     abstract suspend fun getBytes(): ByteArray
     open suspend fun getMultiPartBodyPart(name: String): MultipartBody.Part {
         val requestBody = RequestBody.create(null, getBytes())
@@ -19,5 +19,7 @@ abstract class InputFile(val filename: String? = null): TelegramObject() {
     companion object {
         fun fromBytes(bytes: ByteArray, filename: String? = null) = BytesInputFile(bytes, filename ?: "file")
         fun fromResource(path: String, filename: String? = null) = ResourceInputFile(path, filename ?: path)
+        fun fromURL(url: String, filename: String? = null) = URLInputFile(url, filename ?: url)
+        fun fromFileId(fileId: String, filename: String? = null) = FileIdInputFile(fileId, filename ?: fileId)
     }
 }

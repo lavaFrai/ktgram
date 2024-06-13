@@ -28,3 +28,11 @@ fun <O: Int, T: TelegramResult<O>> T.getResult(): O {
 fun <O: List<Int>, T: TelegramResult<O>> T.getResult(): O {
     return this.result!!
 }
+
+fun <O: Boolean, T: TelegramResult<O>> T.getResult(): O {
+    return this.result!!
+}
+
+fun <O: String, T: TelegramResult<O>> T.getResult(): O {
+    return this.result!!
+}

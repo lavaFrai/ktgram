@@ -6,6 +6,7 @@ import ExternalReplyInfo
 import InlineKeyboardMarkup
 import MessageAutoDeleteTimerChanged
 import ProximityAlertTriggered
+import ReactionType
 import ReplyParameters
 import TextQuote
 import UsersShared
@@ -27,6 +28,7 @@ import ru.lavafrai.ktgram.types.poll.Poll
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.ktgram.types.inputfile.InputFile
+import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 
 /**
  * This object represents a message.
@@ -679,6 +681,34 @@ class Message(
         )
     }
 
+    suspend fun answerMediaGroup(
+        media: List<InputMedia>,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): List<Message> {
+        return bot.sendMediaGroup(
+            chat.id,
+            media,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+        )
+    }
+
+    suspend fun replyMediaGroup(
+        media: List<InputMedia>,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): List<Message> {
+        return bot.sendMediaGroup(
+            chat.id,
+            media,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
     suspend fun forward(
         chatId: Int,
         disableNotification: Boolean? = null,
@@ -705,6 +735,12 @@ class Message(
             disableNotification = disableNotification,
             protectContent = protectContent,
         )
+    }
+
+    suspend fun setReaction(
+        reaction: ReactionType
+    ) {
+        bot.setMessageReaction(chat.id, messageId, listOf(reaction))
     }
 
     val type: MessageType
