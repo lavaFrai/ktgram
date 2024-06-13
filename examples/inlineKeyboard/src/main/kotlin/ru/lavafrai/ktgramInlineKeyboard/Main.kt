@@ -1,6 +1,5 @@
-package ru.lavafrai.ktgramInlinKeyboard
+package ru.lavafrai.ktgramInlineKeyboard
 
-import LoginUrl
 import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
 import ru.lavafrai.ktgram.dispatcher.callback
