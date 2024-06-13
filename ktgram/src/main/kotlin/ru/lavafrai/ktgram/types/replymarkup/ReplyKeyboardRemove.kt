@@ -16,3 +16,5 @@ class ReplyKeyboardRemove(
     @SerialName("remove_keyboard") val removeKeyboard: Boolean = true,
     @SerialName("selective") val selective: Boolean? = null,
 ) : ReplyMarkup()
+
+fun removeKeyboard(selective: Boolean? = null) = ReplyKeyboardRemove(selective = selective)

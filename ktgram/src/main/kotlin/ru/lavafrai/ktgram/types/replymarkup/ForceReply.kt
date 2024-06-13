@@ -23,3 +23,8 @@ class ForceReply(
     @SerialName("input_field_placeholder") val inputFieldPlaceholder: String? = null,
     @SerialName("selective") val selective: Boolean? = null,
 ) : ReplyMarkup()
+
+fun forceReply(
+    inputFieldPlaceholder: String? = null,
+    selective: Boolean? = null,
+) = ForceReply(true, inputFieldPlaceholder, selective)
