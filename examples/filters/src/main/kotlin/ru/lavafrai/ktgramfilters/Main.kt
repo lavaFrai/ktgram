@@ -2,12 +2,18 @@ package ru.lavafrai.ktgramfilters
 
 import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.*
+import ru.lavafrai.ktgram.dispatcher.handlers.MessageFilter
 import ru.lavafrai.ktgram.dispatcher.message
+import ru.lavafrai.ktgram.types.Message
 import ru.lavafrai.ktgram.types.MessageType
 import ru.lavafrai.ktgram.types.UpdateType
 
 fun Dispatcher.addHandlers() {
-    messageFilter({ update.message?.text?.startsWith("/") ?: false }) {
+    val f: MessageFilter = {
+        update.message?.text?.startsWith("/") ?: false
+    }
+
+    messageFilter(f) {
         message.reply("Command: ${update.message!!.text!!.removePrefix("/")}")
     }
 
