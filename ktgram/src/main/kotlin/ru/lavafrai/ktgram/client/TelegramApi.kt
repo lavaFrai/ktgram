@@ -6,8 +6,6 @@ import ChatPermissions
 import ReactionType
 import ReplyParameters
 import kotlinx.serialization.json.Json
-import retrofit2.http.Field
-import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.client.service.factories.MediaGroupBodyFactory
@@ -19,6 +17,7 @@ import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 import ru.lavafrai.ktgram.types.poll.InputPollOption
+import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 
 class TelegramApi(
     private val bot: Bot,
@@ -41,7 +40,7 @@ class TelegramApi(
     ).getResult(bot)
 
     suspend fun sendMessage(
-        chatId: Int,
+        chatId: Long,
         text: String,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -60,9 +59,9 @@ class TelegramApi(
     suspend fun getFile(fileId: String) = service.getFile(fileId).getResult(bot)
 
     suspend fun forwardMessage(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int? = null,
-        fromChatId: Int,
+        fromChatId: Long,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageId: Int,
@@ -71,9 +70,9 @@ class TelegramApi(
     ).getResult(bot)
 
     suspend fun forwardMessages(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int? = null,
-        fromChatId: Int,
+        fromChatId: Long,
         messageIds: List<Int>,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -82,9 +81,9 @@ class TelegramApi(
     ).getResult()
 
     suspend fun copyMessage(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int? = null,
-        fromChatId: Int,
+        fromChatId: Long,
         messageId: Int,
         caption: String? = null,
         parseMode: String? = null,
@@ -99,9 +98,9 @@ class TelegramApi(
     ).getResult(bot)
 
     suspend fun copyMessages(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int? = null,
-        fromChatId: Int,
+        fromChatId: Long,
         messageIds: List<Int>,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -111,7 +110,7 @@ class TelegramApi(
     ).getResult()
 
     suspend fun sendPhoto(
-        chatId: Int,
+        chatId: Long,
         photo: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -128,7 +127,7 @@ class TelegramApi(
     ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo.getMultiPartBodyPart("photo"), caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendAudio(
-        chatId: Int,
+        chatId: Long,
         audio: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -147,7 +146,7 @@ class TelegramApi(
     ) = service.sendAudio(businessConnectionId, chatId, messageThreadId, audio.getMultiPartBodyPart("audio"), caption, parseMode, captionEntities?.toTelegramList(), duration, performer, title, thumbnail?.getMultiPartBodyPart("thumb"), disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendDocument(
-        chatId: Int,
+        chatId: Long,
         document: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -164,7 +163,7 @@ class TelegramApi(
     ) = service.sendDocument(businessConnectionId, chatId, messageThreadId, document.getMultiPartBodyPart("document"), thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities?.toTelegramList(), disableContentTypeDetection, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendVideo(
-        chatId: Int,
+        chatId: Long,
         video: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -186,7 +185,7 @@ class TelegramApi(
     ) = service.sendVideo(businessConnectionId, chatId, messageThreadId, video.getMultiPartBodyPart("video"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, supportsStreaming, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendAnimation(
-        chatId: Int,
+        chatId: Long,
         animation: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -207,7 +206,7 @@ class TelegramApi(
     ) = service.sendAnimation(businessConnectionId, chatId, messageThreadId, animation.getMultiPartBodyPart("animation"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendVoice(
-        chatId: Int,
+        chatId: Long,
         voice: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -223,7 +222,7 @@ class TelegramApi(
     ) = service.sendVoice(businessConnectionId, chatId, messageThreadId, voice.getMultiPartBodyPart("voice"), caption, parseMode, captionEntities?.toTelegramList(), duration, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendVideoNote(
-        chatId: Int,
+        chatId: Long,
         videoNote: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -238,7 +237,7 @@ class TelegramApi(
     ) = service.sendVideoNote(businessConnectionId, chatId, messageThreadId, videoNote.getMultiPartBodyPart("video_note"), duration, length, thumbnail?.getMultiPartBodyPart("thumb"), disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendMediaGroup(
-        chatId: Int,
+        chatId: Long,
         media: List<InputMedia>,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -249,7 +248,7 @@ class TelegramApi(
     ) = service.sendMediaGroup(businessConnectionId, chatId, messageThreadId, mediaGroupBodyFactory.createMediaGroupBody(media), disableNotification, protectContent, messageEffectId, replyParameters).getResult(bot)
 
     suspend fun sendLocation(
-        chatId: Int,
+        chatId: Long,
         latitude: Float,
         longitude: Float,
         businessConnectionId: String? = null,
@@ -268,7 +267,7 @@ class TelegramApi(
     ).getResult(bot)
 
     suspend fun sendVenue(
-        chatId: Int,
+        chatId: Long,
         latitude: Float,
         longitude: Float,
         title: String,
@@ -287,7 +286,7 @@ class TelegramApi(
     ) = service.sendVenue(businessConnectionId, chatId, messageThreadId, latitude, longitude, title, address, foursquareId, foursquareType, googlePlaceId, googlePlaceType, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendContact(
-        chatId: Int,
+        chatId: Long,
         phoneNumber: String,
         firstName: String,
         lastName: String? = null,
@@ -304,7 +303,7 @@ class TelegramApi(
     ).getResult(bot)
 
     suspend fun sendPoll(
-        chatId: Int,
+        chatId: Long,
         question: String,
         options: List<InputPollOption>,
         businessConnectionId: String? = null,
@@ -331,7 +330,7 @@ class TelegramApi(
     ).getResult(bot)
 
     suspend fun sendDice(
-        chatId: Int,
+        chatId: Long,
         emoji: String? = null,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -345,49 +344,49 @@ class TelegramApi(
     ).getResult(bot)
 
     suspend fun sendChatAction(
-        chatId: Int,
+        chatId: Long,
         action: String,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
     ) = service.sendChatAction(businessConnectionId, chatId, messageThreadId, action).getResult()
 
     suspend fun setMessageReaction(
-        chatId: Int,
+        chatId: Long,
         messageId: Int,
         reaction: List<ReactionType>? = null,
         isBig: Boolean? = null,
     ) = service.setMessageReaction(chatId, messageId, reaction?.toTelegramList(), isBig).getResult()
 
     suspend fun getUserProfilePhotos(
-        userId: Int,
+        userId: Long,
         offset: Int? = null,
         limit: Int? = null,
     ) = service.getUserProfilePhotos(userId, offset, limit).getResult(bot)
 
     suspend fun banChatMember(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
         untilDate: Int? = null,
         revokeMessages: Boolean? = null,
     ) = service.banChatMember(chatId, userId, untilDate, revokeMessages).getResult()
 
     suspend fun unbanChatMember(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
         onlyIfBanned: Boolean? = null,
     ) = service.unbanChatMember(chatId, userId, onlyIfBanned).getResult()
 
     suspend fun restrictChatMember(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean? = null,
         untilDate: Int? = null,
     ) = service.restrictChatMember(chatId, userId, permissions, useIndependentChatPermissions, untilDate).getResult()
 
     suspend fun promoteChatMember(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
         isAnonymous: Boolean? = null,
         canManageChat: Boolean? = null,
         canDeleteMessages: Boolean? = null,
@@ -406,33 +405,33 @@ class TelegramApi(
     ) = service.promoteChatMember(chatId, userId, isAnonymous, canManageChat, canDeleteMessages, canManageVideoChats, canRestrictMembers, canPromoteMembers, canChangeInfo, canInviteUsers, canPostStories, canEditStories, canDeleteStories, canPostMessages, canEditMessages, canPinMessages, canManageTopics).getResult()
 
     suspend fun setChatAdministratorCustomTitle(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
         customTitle: String,
     ) = service.setChatAdministratorCustomTitle(chatId, userId, customTitle).getResult()
 
     suspend fun banChatSenderChat(
-        chatId: Int,
-        senderChatId: Int,
+        chatId: Long,
+        senderChatId: Long,
     ) = service.banChatSenderChat(chatId, senderChatId).getResult()
 
     suspend fun unbanChatSenderChat(
-        chatId: Int,
-        senderChatId: Int,
+        chatId: Long,
+        senderChatId: Long,
     ) = service.unbanChatSenderChat(chatId, senderChatId).getResult()
 
     suspend fun setChatPermissions(
-        chatId: Int,
+        chatId: Long,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean? = null,
     ) = service.setChatPermissions(chatId, permissions, useIndependentChatPermissions).getResult()
 
     suspend fun exportChatInviteLink(
-        chatId: Int
+        chatId: Long
     ) = service.exportChatInviteLink(chatId).getResult()
 
     suspend fun createChatInviteLink(
-        chatId: Int,
+        chatId: Long,
         name: String? = null,
         expireDate: Int? = null,
         memberLimit: Int? = null,
@@ -440,7 +439,7 @@ class TelegramApi(
     ) = service.createChatInviteLink(chatId, name, expireDate, memberLimit, createsJoinRequest).getResult(bot)
 
     suspend fun editChatInviteLink(
-        chatId: Int,
+        chatId: Long,
         inviteLink: String,
         name: String? = null,
         expireDate: Int? = null,
@@ -449,143 +448,143 @@ class TelegramApi(
     ) = service.editChatInviteLink(chatId, inviteLink, name, expireDate, memberLimit, createsJoinRequest).getResult(bot)
 
     suspend fun revokeChatInviteLink(
-        chatId: Int,
+        chatId: Long,
         inviteLink: String,
     ) = service.revokeChatInviteLink(chatId, inviteLink).getResult(bot)
 
     suspend fun approveChatJoinRequest(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
     ) = service.approveChatJoinRequest(chatId, userId).getResult()
 
     suspend fun declineChatJoinRequest(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
     ) = service.declineChatJoinRequest(chatId, userId).getResult()
 
     suspend fun setChatPhoto(
-        chatId: Int,
+        chatId: Long,
         photo: InputFile,
     ) = service.setChatPhoto(chatId, photo.getMultiPartBodyPart("photo")).getResult()
 
     suspend fun deleteChatPhoto(
-        chatId: Int,
+        chatId: Long,
     ) = service.deleteChatPhoto(chatId).getResult()
 
     suspend fun setChatTitle(
-        chatId: Int,
+        chatId: Long,
         title: String,
     ) = service.setChatTitle(chatId, title).getResult()
 
     suspend fun setChatDescription(
-        chatId: Int,
+        chatId: Long,
         description: String? = null,
     ) = service.setChatDescription(chatId, description).getResult()
 
     suspend fun pinChatMessage(
-        chatId: Int,
+        chatId: Long,
         messageId: Int,
         disableNotification: Boolean? = null,
     ) = service.pinChatMessage(chatId, messageId, disableNotification).getResult()
 
     suspend fun unpinChatMessage(
-        chatId: Int,
+        chatId: Long,
         messageId: Int? = null,
     ) = service.unpinChatMessage(chatId, messageId).getResult()
 
     suspend fun unpinAllChatMessages(
-        chatId: Int,
+        chatId: Long,
     ) = service.unpinAllChatMessages(chatId).getResult()
 
     suspend fun leaveChat(
-        chatId: Int,
+        chatId: Long,
     ) = service.leaveChat(chatId).getResult()
 
     suspend fun getChat(
-        chatId: Int,
+        chatId: Long,
     ) = service.getChat(chatId).getResult(bot)
 
     suspend fun getChatAdministrators(
-        chatId: Int,
+        chatId: Long,
     ) = service.getChatAdministrators(chatId).getResult(bot)
 
     suspend fun getChatMemberCount(
-        chatId: Int,
+        chatId: Long,
     ) = service.getChatMemberCount(chatId).getResult()
 
     suspend fun getChatMember(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
     ) = service.getChatMember(chatId, userId).getResult(bot)
 
     suspend fun setChatStickerSet(
-        chatId: Int,
+        chatId: Long,
         stickerSetName: String,
     ) = service.setChatStickerSet(chatId, stickerSetName).getResult()
 
     suspend fun deleteChatStickerSet(
-        chatId: Int,
+        chatId: Long,
     ) = service.deleteChatStickerSet(chatId).getResult()
 
     suspend fun getForumTopicIconStickers() = service.getForumTopicIconStickers().getResult(bot)
 
     suspend fun createForumTopic(
-        chatId: Int,
+        chatId: Long,
         name: String,
         iconColor: Int? = null,
         iconCustomEmojiId: String? = null,
     ) = service.createForumTopic(chatId, name, iconColor, iconCustomEmojiId).getResult(bot)
 
     suspend fun editForumTopic(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int,
         name: String? = null,
         iconCustomEmojiId: String? = null,
     ) = service.editForumTopic(chatId, messageThreadId, name, iconCustomEmojiId).getResult()
 
     suspend fun closeForumTopic(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int,
     ) = service.closeForumTopic(chatId, messageThreadId).getResult()
 
     suspend fun reopenForumTopic(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int,
     ) = service.reopenForumTopic(chatId, messageThreadId).getResult()
 
     suspend fun deleteForumTopic(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int,
     ) = service.deleteForumTopic(chatId, messageThreadId).getResult()
 
     suspend fun unpinAllForumTopicMessages(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int,
     ) = service.unpinAllForumTopicMessages(chatId, messageThreadId).getResult()
 
     suspend fun editGeneralForumTopic(
-        chatId: Int,
+        chatId: Long,
         name: String,
     ) = service.editGeneralForumTopic(chatId, name).getResult()
 
     suspend fun closeGeneralForumTopic(
-        chatId: Int,
+        chatId: Long,
     ) = service.closeGeneralForumTopic(chatId).getResult()
 
     suspend fun reopenGeneralForumTopic(
-        chatId: Int,
+        chatId: Long,
     ) = service.reopenGeneralForumTopic(chatId).getResult()
 
     suspend fun hideGeneralForumTopic(
-        chatId: Int,
+        chatId: Long,
     ) = service.hideGeneralForumTopic(chatId).getResult()
 
     suspend fun unhideGeneralForumTopic(
-        chatId: Int,
+        chatId: Long,
     ) = service.unhideGeneralForumTopic(chatId).getResult()
 
     suspend fun unpinAllGeneralForumTopicMessages(
-        chatId: Int,
+        chatId: Long,
     ) = service.unpinAllGeneralForumTopicMessages(chatId).getResult()
 
     suspend fun answerCallbackQuery(
@@ -597,8 +596,8 @@ class TelegramApi(
     ) = service.answerCallbackQuery(callbackQueryId, text, showAlert, url, cacheTime).getResult()
 
     suspend fun getUserChatBoosts(
-        chatId: Int,
-        userId: Int,
+        chatId: Long,
+        userId: Long,
     ) = service.getUserChatBoosts(chatId, userId).getResult(bot)
 
     suspend fun getBusinessConnection(
@@ -649,12 +648,12 @@ class TelegramApi(
     ) = service.getMyShortDescription(languageCode).getResult(bot)
 
     suspend fun setChatMenuButton(
-        chatId: Int? = null,
+        chatId: Long? = null,
         menuButton: MenuButton? = null,
     ) = service.setChatMenuButton(chatId, menuButton).getResult()
 
     suspend fun getChatMenuButton(
-        chatId: Int? = null,
+        chatId: Long? = null,
     ) = service.getChatMenuButton(chatId).getResult(bot)
 
     suspend fun setMyDefaultAdministratorRights(
@@ -665,6 +664,79 @@ class TelegramApi(
     suspend fun getMyDefaultAdministratorRights(
         forChannels: Boolean? = null,
     ) = service.getMyDefaultAdministratorRights(forChannels).getResult(bot)
+
+    suspend fun editMessageText(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        text: String,
+        inlineMessageId: String? = null,
+        parseMode: String? = null,
+        entities: List<MessageEntity>? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.editMessageText(chatId, messageId, inlineMessageId, text, parseMode, entities?.toTelegramList(), linkPreviewOptions, replyMarkup).getResult(bot)
+
+    suspend fun editMessageCaption(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        caption: String,
+        inlineMessageId: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.editMessageCaption(chatId, messageId, inlineMessageId, caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, replyMarkup).getResult(bot)
+
+    suspend fun editMessageMedia(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        media: InputMedia,
+        inlineMessageId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.editMessageMedia(chatId, messageId, inlineMessageId, mediaGroupBodyFactory.createMediaGroupBody(listOf(media)), replyMarkup).getResult(bot)
+
+    suspend fun editMessageReplyMarkup(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        replyMarkup: ReplyMarkup? = null,
+        inlineMessageId: String? = null,
+    ) = service.editMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup).getResult(bot)
+
+    suspend fun stopPoll(
+        chatId: Long,
+        messageId: Int,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.stopPoll(chatId, messageId, replyMarkup).getResult(bot)
+
+    suspend fun deleteMessage(
+        chatId: Long,
+        messageId: Int,
+    ) = service.deleteMessage(chatId, messageId).getResult()
+
+    suspend fun deleteMessages(
+        chatId: Long,
+        messageIds: List<Int>,
+    ) = service.deleteMessages(chatId, messageIds.toTelegramList()).getResult()
+
+    suspend fun editMessageLiveLocation(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        latitude: Float,
+        longitude: Float,
+        inlineMessageId: String? = null,
+        livePeriod: Int? = null,
+        horizontalAccuracy: Float? = null,
+        heading: Int? = null,
+        proximityAlertRadius: Int? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.editMessageLiveLocation(chatId, messageId, inlineMessageId, latitude, longitude, livePeriod, horizontalAccuracy, heading, proximityAlertRadius, replyMarkup).getResult(bot)
+
+    suspend fun stopMessageLiveLocation(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        inlineMessageId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.stopMessageLiveLocation(chatId, messageId, inlineMessageId, replyMarkup).getResult(bot)
 }
 
 fun getAllUpdates() = listOf(

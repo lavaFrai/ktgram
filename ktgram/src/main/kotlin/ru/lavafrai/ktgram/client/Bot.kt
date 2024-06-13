@@ -1,5 +1,6 @@
 package ru.lavafrai.ktgram.client
 
+import BotCommand
 import ReactionType
 import ReplyParameters
 import kotlinx.coroutines.*
@@ -15,6 +16,7 @@ import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 import ru.lavafrai.ktgram.types.poll.InputPollOption
+import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 import ru.lavafrai.ktgram.utils.extractBotId
 import ru.lavafrai.ktgram.utils.validateToken
 import java.util.concurrent.atomic.AtomicBoolean
@@ -113,7 +115,7 @@ class Bot (
      * Use this method to send text messages. On success, the sent Message is returned.
      */
     suspend fun sendMessage(
-        chatId: Int,
+        chatId: Long,
         text: String,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -138,9 +140,9 @@ class Bot (
      * Use this method to forward messages of any kind. Service messages and messages with protected content can't be forwarded. On success, the sent Message is returned.
      */
     suspend fun forwardMessage(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int? = null,
-        fromChatId: Int,
+        fromChatId: Long,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageId: Int,
@@ -152,9 +154,9 @@ class Bot (
      * Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
      */
     suspend fun copyMessage(
-        chatId: Int,
+        chatId: Long,
         messageThreadId: Int? = null,
-        fromChatId: Int,
+        fromChatId: Long,
         messageId: Int,
         caption: String? = null,
         parseMode: String? = default.parseMode,
@@ -172,7 +174,7 @@ class Bot (
      * Use this method to send photos. On success, the sent Message is returned.
      */
     suspend fun sendPhoto(
-        chatId: Int,
+        chatId: Long,
         photo: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -196,7 +198,7 @@ class Bot (
      * For sending voice messages, use the sendVoice method instead.
      */
     suspend fun sendAudio(
-        chatId: Int,
+        chatId: Long,
         audio: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -220,7 +222,7 @@ class Bot (
      * Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
      */
     suspend fun sendDocument(
-        chatId: Int,
+        chatId: Long,
         document: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -242,7 +244,7 @@ class Bot (
      * Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
      */
     suspend fun sendVideo(
-        chatId: Int,
+        chatId: Long,
         video: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -269,7 +271,7 @@ class Bot (
      * Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
      */
     suspend fun sendAnimation(
-        chatId: Int,
+        chatId: Long,
         animation: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -295,7 +297,7 @@ class Bot (
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or in .MP3 format, or in .M4A format (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      */
     suspend fun sendVoice(
-        chatId: Int,
+        chatId: Long,
         voice: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -316,7 +318,7 @@ class Bot (
      * As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.
      */
     suspend fun sendVideoNote(
-        chatId: Int,
+        chatId: Long,
         videoNote: InputFile,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -336,7 +338,7 @@ class Bot (
      * Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned.
      */
     suspend fun sendMediaGroup(
-        chatId: Int,
+        chatId: Long,
         media: List<InputMedia>,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -352,7 +354,7 @@ class Bot (
      * Use this method to send point on the map. On success, the sent Message is returned.
      */
     suspend fun sendLocation(
-        chatId: Int,
+        chatId: Long,
         latitude: Float,
         longitude: Float,
         businessConnectionId: String? = null,
@@ -372,7 +374,7 @@ class Bot (
      * Use this method to send information about a venue. On success, the sent Message is returned.
      */
     suspend fun sendVenue(
-        chatId: Int,
+        chatId: Long,
         latitude: Float,
         longitude: Float,
         title: String,
@@ -394,7 +396,7 @@ class Bot (
      * Use this method to send phone contacts. On success, the sent Message is returned.
      */
     suspend fun sendContact(
-        chatId: Int,
+        chatId: Long,
         phoneNumber: String,
         firstName: String,
         lastName: String? = null,
@@ -412,7 +414,7 @@ class Bot (
      * Use this method to send a native poll. On success, the sent Message is returned.
      */
     suspend fun sendPoll(
-        chatId: Int,
+        chatId: Long,
         question: String,
         options: List<InputPollOption>,
         businessConnectionId: String? = null,
@@ -440,7 +442,7 @@ class Bot (
      * Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned.
      */
     suspend fun sendDice(
-        chatId: Int,
+        chatId: Long,
         emoji: String? = null,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
@@ -455,7 +457,7 @@ class Bot (
      * Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
      */
     suspend fun sendChatAction(
-        chatId: Int,
+        chatId: Long,
         action: String,
     ) = api.sendChatAction(chatId, action)
 
@@ -463,8 +465,26 @@ class Bot (
      * Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.
      */
     suspend fun setMessageReaction(
-        chatId: Int,
+        chatId: Long,
         messageId: Int,
         reactions: List<ReactionType>,
     ) = api.setMessageReaction(chatId, messageId, reactions)
+
+    suspend fun setCommands(commands: List<BotCommand>, scope: BotCommandScope? = null, languageCode: String? = null) = api.setMyCommands(commands, scope, languageCode)
+
+    suspend fun deleteCommands(scope: BotCommandScope? = null, languageCode: String? = null) = api.deleteMyCommands(scope, languageCode)
+
+    suspend fun getCommands(scope: BotCommandScope? = null, languageCode: String? = null) = api.getMyCommands(scope, languageCode)
+
+    suspend fun setName(name: String, languageCode: String? = null) = api.setMyName(name, languageCode)
+
+    suspend fun getName(languageCode: String? = null) = api.getMyName(languageCode)
+
+    suspend fun setDescription(description: String, languageCode: String? = null) = api.setMyDescription(description, languageCode)
+
+    suspend fun getDescription(languageCode: String? = null) = api.getMyDescription(languageCode)
+
+    suspend fun setShortDescription(shortDescription: String, languageCode: String? = null) = api.setMyShortDescription(shortDescription, languageCode)
+
+    suspend fun getShortDescription(languageCode: String? = null) = api.getMyShortDescription(languageCode)
 }

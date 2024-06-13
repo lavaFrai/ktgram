@@ -2,6 +2,7 @@ package ru.lavafrai.ktgram.types
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.lavafrai.ktgram.types.media.UserProfilePhotos
 
 
 /**
@@ -42,5 +43,13 @@ class User(
 
     fun url(): String {
         return "tg://user?id=$id"
+    }
+
+    fun mention(): String {
+        return "@$username"
+    }
+
+    suspend fun getProfilePhotos(): UserProfilePhotos {
+        return bot.api.getUserProfilePhotos(id)
     }
 }

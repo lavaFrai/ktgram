@@ -2,6 +2,7 @@ package ru.lavafrai.ktgram.dispatcher
 
 import ru.lavafrai.ktgram.dispatcher.handlers.*
 import ktgram.dispatcher.environments.MessageHandlerEnvironment
+import ru.lavafrai.ktgram.dispatcher.environments.CallbackQueryHandlerEnvironment
 import ru.lavafrai.ktgram.dispatcher.scopes.UpdateHandlerEnvironment
 import ru.lavafrai.ktgram.types.MessageType
 import ru.lavafrai.ktgram.types.UpdateType
@@ -17,7 +18,7 @@ fun Dispatcher.update(vararg types: UpdateType, handle: suspend UpdateHandlerEnv
 }
 
 fun Dispatcher.message(handle: suspend MessageHandlerEnvironment.() -> Unit) {
-    val handler = MessageHandler(handle, this)
+    val handler = MessageFilterHandler(handler = handle, dispatcher = this)
     addHandler(handler)
 }
 
@@ -31,7 +32,7 @@ fun Dispatcher.filter(vararg filters: Filter, handle: suspend UpdateHandlerEnvir
 }
 
 fun Dispatcher.messageFilter(vararg filters: Filter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
-    val handler = MessageFilterHandler(*filters, handler=handle)
+    val handler = MessageFilterHandler(*filters, handler=handle, dispatcher = this)
     addHandler(handler)
 }
 
@@ -39,7 +40,7 @@ fun Dispatcher.text(vararg filters: Filter, handle: suspend MessageHandlerEnviro
     val filtersList = filters.toMutableList()
     filtersList.add { update -> update.message?.type == MessageType.Text }
 
-    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle)
+    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
     addHandler(handler)
 }
 
@@ -47,7 +48,15 @@ fun Dispatcher.photo(vararg filters: Filter, handle: suspend MessageHandlerEnvir
     val filtersList = filters.toMutableList()
     filtersList.add { update -> update.message?.type == MessageType.Photo }
 
-    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle)
+    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
+    addHandler(handler)
+}
+
+fun Dispatcher.callback(vararg filters: Filter, handle: suspend CallbackQueryHandlerEnvironment.() -> Unit) {
+    val filtersList = filters.toMutableList()
+    filtersList.add { update -> update.callbackQuery != null }
+
+    val handler = CallbackQueryHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
     addHandler(handler)
 }
 

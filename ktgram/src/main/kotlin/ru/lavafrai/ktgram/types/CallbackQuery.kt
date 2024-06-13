@@ -26,4 +26,12 @@ class CallbackQuery(
     @SerialName("chat_instance") val chatInstance: String,
     @SerialName("data") val data: String? = null,
     @SerialName("game_short_name") val gameShortName: String? = null,
-) : TelegramObject()
+) : TelegramObject() {
+    suspend fun answer(text: String? = null, showAlert: Boolean? = null, url: String? = null, cacheTime: Int? = null) {
+        bot.api.answerCallbackQuery(id, text, showAlert, url, cacheTime)
+    }
+
+    suspend fun reply(text: String, url: String? = null, cacheTime: Int? = null) {
+        bot.api.answerCallbackQuery(id, text, true, url, cacheTime)
+    }
+}

@@ -1,6 +1,8 @@
+package ru.lavafrai.ktgram.types.replymarkup
+
+import KeyboardButton
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.lavafrai.ktgram.types.ReplyMarkup
 
 /**
  * This object represents a custom keyboard with reply options (see [Introduction to bots](https://core.telegram.org/bots#introduction) for details and examples). Not supported in channels and for messages sent on behalf of a Telegram Business account.

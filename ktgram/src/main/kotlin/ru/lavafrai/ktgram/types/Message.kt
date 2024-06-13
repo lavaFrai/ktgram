@@ -3,7 +3,6 @@ package ru.lavafrai.ktgram.types
 import ChatBoostAdded
 import ChatShared
 import ExternalReplyInfo
-import InlineKeyboardMarkup
 import MessageAutoDeleteTimerChanged
 import ProximityAlertTriggered
 import ReactionType
@@ -29,6 +28,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
+import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 
 /**
  * This object represents a message.
@@ -201,7 +201,7 @@ class Message(
     @SerialName("video_chat_ended") val videoChatEnded: VideoChatEnded? = null,
     @SerialName("video_chat_participants_invited") val videoChatParticipantsInvited: VideoChatParticipantsInvited? = null,
     @SerialName("web_app_data") val webAppData: WebAppData? = null,
-    @SerialName("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
+    @SerialName("reply_markup") val replyMarkup: ReplyMarkup? = null,
 ) : TelegramObject() {
     suspend fun answer(
         text: String,
@@ -210,7 +210,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendMessage(
             chat.id,
@@ -231,7 +231,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendMessage(
             chat.id,
@@ -256,7 +256,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendPhoto(
             chat.id,
@@ -282,7 +282,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendPhoto(
             chat.id,
@@ -313,7 +313,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendAudio(
             chat.id,
@@ -345,7 +345,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendAudio(
             chat.id,
@@ -377,7 +377,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendDocument(
             chat.id,
@@ -405,7 +405,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendDocument(
             chat.id,
@@ -440,7 +440,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendVideo(
             chat.id,
@@ -478,7 +478,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendVideo(
             chat.id,
@@ -517,7 +517,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendAnimation(
             chat.id,
@@ -553,7 +553,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendAnimation(
             chat.id,
@@ -586,7 +586,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendVoice(
             chat.id,
@@ -612,7 +612,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendVoice(
             chat.id,
@@ -639,7 +639,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendVideoNote(
             chat.id,
@@ -663,7 +663,7 @@ class Message(
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        replyMarkup: ReplyMarkup? = null,
     ): Message {
         return bot.sendVideoNote(
             chat.id,
@@ -710,7 +710,7 @@ class Message(
     }
 
     suspend fun forward(
-        chatId: Int,
+        chatId: Long,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ): Message {
@@ -724,7 +724,7 @@ class Message(
     }
 
     suspend fun copy(
-        chatId: Int,
+        chatId: Long,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ): Message {
@@ -737,10 +737,76 @@ class Message(
         )
     }
 
+    suspend fun pin() {
+        bot.api.pinChatMessage(chat.id, messageId)
+    }
+
     suspend fun setReaction(
         reaction: ReactionType
     ) {
         bot.setMessageReaction(chat.id, messageId, listOf(reaction))
+    }
+
+    suspend fun editText(
+        text: String,
+        parseMode: String? = null,
+        entities: List<MessageEntity>? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.api.editMessageText(
+            chat.id,
+            messageId,
+            text,
+            parseMode = parseMode,
+            entities = entities,
+            linkPreviewOptions = linkPreviewOptions,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun editCaption(
+        caption: String,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.api.editMessageCaption(
+            chat.id,
+            messageId,
+            caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun editMedia(
+        media: InputMedia,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.api.editMessageMedia(
+            chat.id,
+            messageId,
+            media,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun editReplyMarkup(
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.api.editMessageReplyMarkup(
+            chat.id,
+            messageId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun delete() {
+        bot.api.deleteMessage(chat.id, messageId)
     }
 
     val type: MessageType
@@ -782,7 +848,7 @@ class Message(
                 // voiceChatEnded != null -> MessageType.VoiceChatEnded
                 // voiceChatParticipantsInvited != null -> MessageType.VoiceChatParticipantsInvited
                 messageAutoDeleteTimerChanged != null -> MessageType.MessageAutoDeleteTimerChanged
-                else -> throw IllegalStateException("Unknown message type")
+                else -> MessageType.Unknown
             }
         }
 }

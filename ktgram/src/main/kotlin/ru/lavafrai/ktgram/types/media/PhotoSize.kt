@@ -21,3 +21,7 @@ class PhotoSize(
     @SerialName("height") val height: Int,
     @SerialName("file_size") val fileSize: Int? = null,
 ) : TelegramObject()
+
+fun List<PhotoSize>.largest(): PhotoSize {
+    return this.last()
+}

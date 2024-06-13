@@ -14,11 +14,9 @@ import ReplyParameters
 import UserChatBoosts
 import kotlinx.serialization.json.Json
 import ktgram.types.stickers.Sticker
-import okhttp3.Interceptor
-import okhttp3.MultipartBody
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Response
+import okhttp3.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.*
@@ -29,9 +27,10 @@ import ru.lavafrai.ktgram.types.media.File
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.UserProfilePhotos
+import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 import ru.lavafrai.ktgram.types.poll.InputPollOption
-import java.net.InetSocketAddress
-import java.net.Proxy
+import ru.lavafrai.ktgram.types.poll.Poll
+import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
@@ -52,7 +51,7 @@ interface TelegramApiService {
     @POST("sendMessage")
     suspend fun sendMessage(
         @Field("business_connection_id") businessConnectionId: String?,
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int?,
         @Field("text") text: String,
         @Field("parse_mode") parseMode: String?,
@@ -74,9 +73,9 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("forwardMessage")
     suspend fun forwardMessage(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int? = null,
-        @Field("from_chat_id") fromChatId: Int,
+        @Field("from_chat_id") fromChatId: Long,
         @Field("disable_notification") disableNotification: Boolean? = null,
         @Field("protect_content") protectContent: Boolean? = null,
         @Field("message_id") messageId: Int,
@@ -85,9 +84,9 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("forwardMessages")
     suspend fun forwardMessages(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int? = null,
-        @Field("from_chat_id") fromChatId: Int,
+        @Field("from_chat_id") fromChatId: Long,
         @Field("message_ids") messageIds: TelegramList<Int>,
         @Field("disable_notification") disableNotification: Boolean? = null,
         @Field("protect_content") protectContent: Boolean? = null,
@@ -96,9 +95,9 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("copyMessage")
     suspend fun copyMessage(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int? = null,
-        @Field("from_chat_id") fromChatId: Int,
+        @Field("from_chat_id") fromChatId: Long,
         @Field("message_id") messageId: Int,
         @Field("caption") caption: String? = null,
         @Field("parse_mode") parseMode: String? = null,
@@ -113,9 +112,9 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("copyMessages")
     suspend fun copyMessages(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int? = null,
-        @Field("from_chat_id") fromChatId: Int,
+        @Field("from_chat_id") fromChatId: Long,
         @Field("message_ids") messageIds: TelegramList<Int>,
         @Field("disable_notification") disableNotification: Boolean? = null,
         @Field("protect_content") protectContent: Boolean? = null,
@@ -126,7 +125,7 @@ interface TelegramApiService {
     @POST("sendPhoto")
     suspend fun sendPhoto(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part photo: MultipartBody.Part,
         @Part("caption") caption: String?,
@@ -145,7 +144,7 @@ interface TelegramApiService {
     @POST("sendAudio")
     suspend fun sendAudio(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part audio: MultipartBody.Part,
         @Part("caption") caption: String?,
@@ -166,7 +165,7 @@ interface TelegramApiService {
     @POST("sendDocument")
     suspend fun sendDocument(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part document: MultipartBody.Part,
         @Part thumbnail: MultipartBody.Part?,
@@ -185,7 +184,7 @@ interface TelegramApiService {
     @POST("sendVideo")
     suspend fun sendVideo(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part video: MultipartBody.Part,
         @Part("duration") duration: Int?,
@@ -209,7 +208,7 @@ interface TelegramApiService {
     @POST("sendAnimation")
     suspend fun sendAnimation(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part animation: MultipartBody.Part,
         @Part("duration") duration: Int?,
@@ -232,7 +231,7 @@ interface TelegramApiService {
     @POST("sendVoice")
     suspend fun sendVoice(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part voice: MultipartBody.Part,
         @Part("caption") caption: String?,
@@ -250,7 +249,7 @@ interface TelegramApiService {
     @POST("sendVideoNote")
     suspend fun sendVideoNote(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part videoNote: MultipartBody.Part,
         @Part("duration") duration: Int?,
@@ -267,7 +266,7 @@ interface TelegramApiService {
     @POST("sendMediaGroup")
     suspend fun sendMediaGroup(
         @Part("business_connection_id") businessConnectionId: String?,
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part("message_thread_id") messageThreadId: Int?,
         @Part media: List<MultipartBody.Part>,
         @Part("disable_notification") disableNotification: Boolean?,
@@ -280,7 +279,7 @@ interface TelegramApiService {
     @POST("sendLocation")
     suspend fun sendLocation(
         @Field("business_connection_id") businessConnectionId: String?,
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int?,
         @Field("latitude") latitude: Float,
         @Field("longitude") longitude: Float,
@@ -299,7 +298,7 @@ interface TelegramApiService {
     @POST("sendVenue")
     suspend fun sendVenue(
         @Field("business_connection_id") businessConnectionId: String?,
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int?,
         @Field("latitude") latitude: Float,
         @Field("longitude") longitude: Float,
@@ -320,7 +319,7 @@ interface TelegramApiService {
     @POST("sendContact")
     suspend fun sendContact(
         @Field("business_connection_id") businessConnectionId: String?,
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int?,
         @Field("phone_number") phoneNumber: String,
         @Field("first_name") firstName: String,
@@ -337,7 +336,7 @@ interface TelegramApiService {
     @POST("sendPoll")
     suspend fun sendPoll(
         @Field("business_connection_id") businessConnectionId: String?,
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int?,
         @Field("question") question: String,
         @Field("question_parse_mode") questionParseMode: String?,
@@ -364,7 +363,7 @@ interface TelegramApiService {
     @POST("sendDice")
     suspend fun sendDice(
         @Field("business_connection_id") businessConnectionId: String?,
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int?,
         @Field("emoji") emoji: String?,
         @Field("disable_notification") disableNotification: Boolean?,
@@ -378,7 +377,7 @@ interface TelegramApiService {
     @POST("sendChatAction")
     suspend fun sendChatAction(
         @Field("business_connection_id") businessConnectionId: String?,
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int?,
         @Field("action") action: String,
     ): TelegramResult<Boolean>
@@ -386,7 +385,7 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("setMessageReaction")
     suspend fun setMessageReaction(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_id") messageId: Int,
         @Field("reaction") reaction: TelegramList<ReactionType>?,
         @Field("is_big") isBig: Boolean?,
@@ -395,7 +394,7 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("getUserProfilePhotos")
     suspend fun getUserProfilePhotos(
-        @Field("user_id") userId: Int,
+        @Field("user_id") userId: Long,
         @Field("offset") offset: Int?,
         @Field("limit") limit: Int?,
     ): TelegramResult<UserProfilePhotos>
@@ -403,8 +402,8 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("banChatMember")
     suspend fun banChatMember(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
         @Field("until_date") untilDate: Int?,
         @Field("revoke_messages") revokeMessages: Boolean?,
     ): TelegramResult<Boolean>
@@ -412,16 +411,16 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("unbanChatMember")
     suspend fun unbanChatMember(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
         @Field("only_if_banned") onlyIfBanned: Boolean?,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("restrictChatMember")
     suspend fun restrictChatMember(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
         @Field("permissions") permissions: ChatPermissions,
         @Field("use_independent_chat_permissions") useIndependentChatPermissions: Boolean?,
         @Field("until_date") untilDate: Int?,
@@ -430,8 +429,8 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("promoteChatMember")
     suspend fun promoteChatMember(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
         @Field("is_anonymous") isAnonymous: Boolean?,
         @Field("can_manage_chat") canManageChat: Boolean?,
         @Field("can_delete_messages") canDeleteMessages: Boolean?,
@@ -452,29 +451,29 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("setChatAdministratorCustomTitle")
     suspend fun setChatAdministratorCustomTitle(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
         @Field("custom_title") customTitle: String,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("banChatSenderChat")
     suspend fun banChatSenderChat(
-        @Field("chat_id") chatId: Int,
-        @Field("sender_chat_id") senderChatId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("sender_chat_id") senderChatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("unbanChatSenderChat")
     suspend fun unbanChatSenderChat(
-        @Field("chat_id") chatId: Int,
-        @Field("sender_chat_id") senderChatId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("sender_chat_id") senderChatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("setChatPermissions")
     suspend fun setChatPermissions(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("permissions") permissions: ChatPermissions,
         @Field("use_independent_chat_permissions") useIndependentChatPermissions: Boolean?,
     ): TelegramResult<Boolean>
@@ -482,13 +481,13 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("exportChatInviteLink")
     suspend fun exportChatInviteLink(
-        @Field("chat_id") chatId: Int
+        @Field("chat_id") chatId: Long
     ): TelegramResult<String>
 
     @FormUrlEncoded
     @POST("createChatInviteLink")
     suspend fun createChatInviteLink(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("name") name: String?,
         @Field("expire_date") expireDate: Int?,
         @Field("member_limit") memberLimit: Int?,
@@ -498,7 +497,7 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("editChatInviteLink")
     suspend fun editChatInviteLink(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("invite_link") inviteLink: String,
         @Field("name") name: String?,
         @Field("expire_date") expireDate: Int?,
@@ -509,55 +508,55 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("revokeChatInviteLink")
     suspend fun revokeChatInviteLink(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("invite_link") inviteLink: String,
     ): TelegramResult<ChatInviteLink>
 
     @FormUrlEncoded
     @POST("approveChatJoinRequest")
     suspend fun approveChatJoinRequest(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("declineChatJoinRequest")
     suspend fun declineChatJoinRequest(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
     ): TelegramResult<Boolean>
 
     @Multipart
     @POST("setChatPhoto")
     suspend fun setChatPhoto(
-        @Part("chat_id") chatId: Int,
+        @Part("chat_id") chatId: Long,
         @Part photo: MultipartBody.Part,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("deleteChatPhoto")
     suspend fun deleteChatPhoto(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("setChatTitle")
     suspend fun setChatTitle(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("title") title: String,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("setChatDescription")
     suspend fun setChatDescription(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("description") description: String?,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("pinChatMessage")
     suspend fun pinChatMessage(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_id") messageId: Int,
         @Field("disable_notification") disableNotification: Boolean?,
     ): TelegramResult<Boolean>
@@ -565,58 +564,58 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("unpinChatMessage")
     suspend fun unpinChatMessage(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_id") messageId: Int?,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("unpinAllChatMessages")
     suspend fun unpinAllChatMessages(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("leaveChat")
     suspend fun leaveChat(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("getChat")
     suspend fun getChat(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<ChatFullInfo>
 
     @FormUrlEncoded
     @POST("getChatAdministrators")
     suspend fun getChatAdministrators(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<List<ChatMember>>
 
     @FormUrlEncoded
     @POST("getChatMemberCount")
     suspend fun getChatMemberCount(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Int>
 
     @FormUrlEncoded
     @POST("getChatMember")
     suspend fun getChatMember(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
     ): TelegramResult<ChatMember>
 
     @FormUrlEncoded
     @POST("setChatStickerSet")
     suspend fun setChatStickerSet(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("sticker_set_name") stickerSetName: String,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("deleteChatStickerSet")
     suspend fun deleteChatStickerSet(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @POST("getForumTopicIconStickers")
@@ -625,7 +624,7 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("createForumTopic")
     suspend fun createForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("name") name: String,
         @Field("icon_color") iconColor: Int?,
         @Field("icon_custom_emoji_id") iconCustomEmojiId: String?,
@@ -634,7 +633,7 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("editForumTopic")
     suspend fun editForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int,
         @Field("name") name: String?,
         @Field("icon_custom_emoji_id") iconCustomEmojiId: String?,
@@ -643,66 +642,66 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("closeForumTopic")
     suspend fun closeForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("reopenForumTopic")
     suspend fun reopenForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("deleteForumTopic")
     suspend fun deleteForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("unpinAllForumTopicMessages")
     suspend fun unpinAllForumTopicMessages(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("message_thread_id") messageThreadId: Int,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("editGeneralForumTopic")
     suspend fun editGeneralForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
         @Field("name") name: String,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("closeGeneralForumTopic")
     suspend fun closeGeneralForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("reopenGeneralForumTopic")
     suspend fun reopenGeneralForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("hideGeneralForumTopic")
     suspend fun hideGeneralForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("unhideGeneralForumTopic")
     suspend fun unhideGeneralForumTopic(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("unpinAllGeneralForumTopicMessages")
     suspend fun unpinAllGeneralForumTopicMessages(
-        @Field("chat_id") chatId: Int,
+        @Field("chat_id") chatId: Long,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
@@ -718,8 +717,8 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("getUserChatBoosts")
     suspend fun getUserChatBoosts(
-        @Field("chat_id") chatId: Int,
-        @Field("user_id") userId: Int,
+        @Field("chat_id") chatId: Long,
+        @Field("user_id") userId: Long,
     ): TelegramResult<UserChatBoosts>
 
     @FormUrlEncoded
@@ -792,14 +791,14 @@ interface TelegramApiService {
     @FormUrlEncoded
     @POST("setChatMenuButton")
     suspend fun setChatMenuButton(
-        @Field("chat_id") chatId: Int?,
+        @Field("chat_id") chatId: Long?,
         @Field("menu_button") menuButton: MenuButton?,
     ): TelegramResult<Boolean>
 
     @FormUrlEncoded
     @POST("getChatMenuButton")
     suspend fun getChatMenuButton(
-        @Field("chat_id") chatId: Int?,
+        @Field("chat_id") chatId: Long?,
     ): TelegramResult<MenuButton>
 
     @FormUrlEncoded
@@ -814,20 +813,135 @@ interface TelegramApiService {
     suspend fun getMyDefaultAdministratorRights(
         @Field("for_channels") forChannels: Boolean?,
     ): TelegramResult<ChatAdministratorRights>
+
+    @FormUrlEncoded
+    @POST("editMessageText")
+    suspend fun editMessageText(
+        @Field("chat_id") chatId: Long?,
+        @Field("message_id") messageId: Int?,
+        @Field("inline_message_id") inlineMessageId: String?,
+        @Field("text") text: String,
+        @Field("parse_mode") parseMode: String?,
+        @Field("entities") entities: TelegramList<MessageEntity>?,
+        @Field("link_preview_options") linkPreviewOptions: LinkPreviewOptions?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("editMessageCaption")
+    suspend fun editMessageCaption(
+        @Field("chat_id") chatId: Long?,
+        @Field("message_id") messageId: Int?,
+        @Field("inline_message_id") inlineMessageId: String?,
+        @Field("caption") caption: String,
+        @Field("parse_mode") parseMode: String?,
+        @Field("caption_entities") captionEntities: TelegramList<MessageEntity>?,
+        @Field("show_caption_above_media") showCaptionAboveMedia: Boolean?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @Multipart
+    @POST("editMessageMedia")
+    suspend fun editMessageMedia(
+        @Part("chat_id") chatId: Long?,
+        @Part("message_id") messageId: Int?,
+        @Part("inline_message_id") inlineMessageId: String?,
+        @Part media: List<MultipartBody.Part>,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("editMessageLiveLocation")
+    suspend fun editMessageLiveLocation(
+        @Field("chat_id") chatId: Long?,
+        @Field("message_id") messageId: Int?,
+        @Field("inline_message_id") inlineMessageId: String?,
+        @Field("latitude") latitude: Float,
+        @Field("longitude") longitude: Float,
+        @Field("live_period") livePeriod: Int?,
+        @Field("horizontal_accuracy") horizontalAccuracy: Float?,
+        @Field("heading") heading: Int?,
+        @Field("proximity_alert_radius") proximityAlertRadius: Int?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("stopMessageLiveLocation")
+    suspend fun stopMessageLiveLocation(
+        @Field("chat_id") chatId: Long?,
+        @Field("message_id") messageId: Int?,
+        @Field("inline_message_id") inlineMessageId: String?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("editMessageReplyMarkup")
+    suspend fun editMessageReplyMarkup(
+        @Field("chat_id") chatId: Long?,
+        @Field("message_id") messageId: Int?,
+        @Field("inline_message_id") inlineMessageId: String?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("stopPoll")
+    suspend fun stopPoll(
+        @Field("chat_id") chatId: Long,
+        @Field("message_id") messageId: Int,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Poll>
+
+    @FormUrlEncoded
+    @POST("deleteMessage")
+    suspend fun deleteMessage(
+        @Field("chat_id") chatId: Long,
+        @Field("message_id") messageId: Int,
+    ): TelegramResult<Boolean>
+
+    @FormUrlEncoded
+    @POST("deleteMessages")
+    suspend fun deleteMessages(
+        @Field("chat_id") chatId: Long,
+        @Field("message_ids") messageIds: TelegramList<Int>,
+    ): TelegramResult<Boolean>
 }
 
 const val PRODUCTION = "https://api.telegram.org/bot{token}/"
 
 
-class TgInterceptor: Interceptor {
+class TgInterceptor(val log: Logger = LoggerFactory.getLogger(TgInterceptor::class.java)): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val response: Response = chain.proceed(request)
+        var response: Response = chain.proceed(request)
+
+        response = handleErrors(request, response, chain)
+
+        return response
+    }
+
+    private fun handleErrors(request: Request, response: Response, chain: Interceptor.Chain): Response {
         if (response.code() == 400) {
             throw TelegramBadRequest(response.body()?.string() ?: "")
         }
 
+        if (response.code() == 429) {
+            val wait = 10000 + (Math.random() * 5000).toLong()
+            log.warn("Throttling while processing request. Waiting for ${wait.div(1000)} seconds")
+            Thread.sleep(wait)
+            return redoRequest(request, response, chain)
+        }
+
         return response
+    }
+
+    private fun redoRequest(req: Request, oldResp: Response, chain: Interceptor.Chain): Response {
+        val newRequest: Request = req.newBuilder().build()
+        oldResp.close()
+
+        var response = chain.proceed(newRequest)
+        response = handleErrors(newRequest, response, chain)
+
+        return response;
     }
 }
 
