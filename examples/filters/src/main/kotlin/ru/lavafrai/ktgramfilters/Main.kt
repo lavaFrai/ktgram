@@ -7,7 +7,7 @@ import ru.lavafrai.ktgram.types.MessageType
 import ru.lavafrai.ktgram.types.UpdateType
 
 fun Dispatcher.addHandlers() {
-    messageFilter({ update -> update.message?.text?.startsWith("/") ?: false }) {
+    messageFilter({ update.message?.text?.startsWith("/") ?: false }) {
         message.reply("Command: ${update.message!!.text!!.removePrefix("/")}")
     }
 

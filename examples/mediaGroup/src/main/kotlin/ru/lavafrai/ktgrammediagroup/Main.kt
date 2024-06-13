@@ -4,7 +4,6 @@ import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.*
 import ru.lavafrai.ktgram.dispatcher.message
 import ru.lavafrai.ktgram.types.inputfile.InputFile
-import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMediaType
 import ru.lavafrai.ktgram.types.media.inputmedia.toMedia
 

@@ -11,3 +11,8 @@ import ru.lavafrai.ktgram.types.TelegramObject
 class KeyboardButtonPollType(
     @SerialName("type") val type: String? = null,
 ) : TelegramObject()
+
+enum class PollType(val type: String) {
+    QUIZ("quiz"),
+    REGULAR("regular"),
+}

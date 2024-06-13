@@ -1,3 +1,9 @@
+package ru.lavafrai.ktgram.types.replymarkup.replyKeyboard
+
+import KeyboardButtonPollType
+import KeyboardButtonRequestChat
+import KeyboardButtonRequestUsers
+import WebAppInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.ktgram.types.TelegramObject

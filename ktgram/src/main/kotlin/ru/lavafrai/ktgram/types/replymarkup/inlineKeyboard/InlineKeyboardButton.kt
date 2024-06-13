@@ -1,4 +1,4 @@
-package ru.lavafrai.ktgram.types.replymarkup
+package ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard
 
 import LoginUrl
 import SwitchInlineQueryChosenChat

@@ -1,13 +1,14 @@
-package ru.lavafrai.ktgram.types.replymarkup
+package ru.lavafrai.ktgram.types.replymarkup.replyKeyboard
 
-import KeyboardButton
+import ru.lavafrai.ktgram.types.replymarkup.replyKeyboard.KeyboardButton
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 
 /**
  * This object represents a custom keyboard with reply options (see [Introduction to bots](https://core.telegram.org/bots#introduction) for details and examples). Not supported in channels and for messages sent on behalf of a Telegram Business account.
  *
- * @param keyboard Array of button rows, each represented by an Array of [KeyboardButton][ru.lavafrai.ktgram.types.KeyboardButton] objects
+ * @param keyboard Array of button rows, each represented by an Array of [ru.lavafrai.ktgram.types.replymarkup.replyKeyboard.KeyboardButton][ru.lavafrai.ktgram.types.ru.lavafrai.ktgram.types.replymarkup.replyKeyboard.KeyboardButton] objects
  * @param isPersistent *Optional.* Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
  * @param resizeKeyboard *Optional.* Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
  * @param oneTimeKeyboard *Optional.* Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.

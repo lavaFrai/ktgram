@@ -27,7 +27,6 @@ import ru.lavafrai.ktgram.types.media.File
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.UserProfilePhotos
-import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.poll.Poll
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup

@@ -4,13 +4,16 @@ import ru.lavafrai.ktgram.dispatcher.scopes.UpdateHandlerEnvironment
 import ru.lavafrai.ktgram.types.Update
 
 
-typealias Filter = suspend (update: Update) -> Boolean
+open class FilterEnvironment(val update: Update)
+
+typealias Filter = suspend FilterEnvironment.() -> Boolean
 
 class FilterHandler(vararg filters: Filter, val handler: suspend UpdateHandlerEnvironment.() -> Unit): Handler {
     private val filters = filters.toList()
 
     override suspend fun predict(update: Update): Boolean {
-        return filters.all { it(update) }
+        val env = FilterEnvironment(update)
+        return filters.all { it(env) }
     }
 
     override suspend fun handle(update: Update) {

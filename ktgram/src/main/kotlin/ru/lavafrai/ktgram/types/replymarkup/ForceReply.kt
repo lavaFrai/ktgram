@@ -1,6 +1,7 @@
+package ru.lavafrai.ktgram.types.replymarkup
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 
 /**
  * Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode. Not supported in channels and for messages sent on behalf of a Telegram Business account.
@@ -14,7 +15,7 @@ import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
  * Explain the user how to send a command with parameters (e.g. /newpoll question answer1 answer2). May be appealing for hardcore users but lacks modern day polish.
  * Guide the user through a step-by-step process. 'Please send me your question', 'Cool, now let's add the first answer option', 'Great. Keep adding answer options, then send /done when you're ready'.
  *
- * The last option is definitely more attractive. And if you use ForceReply in your bot's questions, it will receive the user's answers even if it only receives replies, commands and mentions - without any extra work for the user.
+ * The last option is definitely more attractive. And if you use ru.lavafrai.ktgram.types.replymarkup.ForceReply in your bot's questions, it will receive the user's answers even if it only receives replies, commands and mentions - without any extra work for the user.
  */
 @Serializable
 class ForceReply(

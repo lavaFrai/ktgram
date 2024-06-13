@@ -13,17 +13,17 @@ fun Dispatcher.update(handle: suspend UpdateHandlerEnvironment.() -> Unit) {
 }
 
 fun Dispatcher.update(vararg types: UpdateType, handle: suspend UpdateHandlerEnvironment.() -> Unit) {
-    val handler = FilterHandler({ update -> update.type in types }, handler=handle)
+    val handler = FilterHandler({ update.type in types }, handler=handle)
     addHandler(handler)
 }
 
 fun Dispatcher.message(handle: suspend MessageHandlerEnvironment.() -> Unit) {
-    val handler = MessageFilterHandler(handler = handle, dispatcher = this)
+    val handler = MessageHandler(handler = handle, dispatcher = this)
     addHandler(handler)
 }
 
 fun Dispatcher.message(vararg types: MessageType, handle: suspend MessageHandlerEnvironment.() -> Unit) {
-    messageFilter({ update -> update.message?.type in types.toList() }, handle=handle)
+    messageFilter({ message.type in types.toList() }, handle=handle)
 }
 
 fun Dispatcher.filter(vararg filters: Filter, handle: suspend UpdateHandlerEnvironment.() -> Unit) {
@@ -31,30 +31,29 @@ fun Dispatcher.filter(vararg filters: Filter, handle: suspend UpdateHandlerEnvir
     addHandler(handler)
 }
 
-fun Dispatcher.messageFilter(vararg filters: Filter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
-    val handler = MessageFilterHandler(*filters, handler=handle, dispatcher = this)
+fun Dispatcher.messageFilter(vararg filters: MessageFilter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
+    val handler = MessageHandler(*filters, handler=handle, dispatcher = this)
     addHandler(handler)
 }
 
-fun Dispatcher.text(vararg filters: Filter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
+fun Dispatcher.text(vararg filters: MessageFilter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
     val filtersList = filters.toMutableList()
-    filtersList.add { update -> update.message?.type == MessageType.Text }
+    filtersList.add { message.type == MessageType.Text }
 
-    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
+    val handler = MessageHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
     addHandler(handler)
 }
 
-fun Dispatcher.photo(vararg filters: Filter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
+fun Dispatcher.photo(vararg filters: MessageFilter, handle: suspend MessageHandlerEnvironment.() -> Unit) {
     val filtersList = filters.toMutableList()
-    filtersList.add { update -> update.message?.type == MessageType.Photo }
+    filtersList.add { message.type == MessageType.Photo }
 
-    val handler = MessageFilterHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
+    val handler = MessageHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
     addHandler(handler)
 }
 
-fun Dispatcher.callback(vararg filters: Filter, handle: suspend CallbackQueryHandlerEnvironment.() -> Unit) {
+fun Dispatcher.callback(vararg filters: CallbackQueryFilter, handle: suspend CallbackQueryHandlerEnvironment.() -> Unit) {
     val filtersList = filters.toMutableList()
-    filtersList.add { update -> update.callbackQuery != null }
 
     val handler = CallbackQueryHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
     addHandler(handler)
