@@ -7,6 +7,7 @@ import ReactionType
 import ReplyParameters
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
+import retrofit2.http.Field
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.client.service.factories.MediaGroupBodyFactory
 import ru.lavafrai.ktgram.client.service.getClient
@@ -16,6 +17,8 @@ import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
+import ru.lavafrai.ktgram.types.payments.LabeledPrice
+import ru.lavafrai.ktgram.types.payments.ShippingOption
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 
@@ -737,6 +740,79 @@ class TelegramApi(
         inlineMessageId: String? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = service.stopMessageLiveLocation(chatId, messageId, inlineMessageId, replyMarkup).getResult(bot)
+
+    suspend fun sendInvoice(
+        chatId: Long,
+        title: String,
+        description: String,
+        payload: String,
+        currency: String,
+        prices: List<LabeledPrice>,
+        providerToken: String? = null,
+        messageThreadId: String? = null,
+        maxTipAmount: Int? = null,
+        suggestedTipAmounts: List<Int>? = null,
+        startParameter: String? = null,
+        providerData: String? = null,
+        photoUrl: String? = null,
+        photoSize: Int? = null,
+        photoWidth: Int? = null,
+        photoHeight: Int? = null,
+        needName: Boolean? = null,
+        needPhoneNumber: Boolean? = null,
+        needEmail: Boolean? = null,
+        needShippingAddress: Boolean? = null,
+        sendPhoneNumberToProvider: Boolean? = null,
+        sendEmailToProvider: Boolean? = null,
+        isFlexible: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = service.sendInvoice(chatId, messageThreadId, title, description, payload, providerToken, currency, prices.toTelegramList(), maxTipAmount, suggestedTipAmounts?.toTelegramList(), startParameter, providerData, photoUrl, photoSize, photoWidth, photoHeight, needName, needPhoneNumber, needEmail, needShippingAddress, sendPhoneNumberToProvider, sendEmailToProvider, isFlexible, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+
+    suspend fun createInvoiceLink(
+        title: String,
+        description: String,
+        payload: String,
+        currency: String,
+        prices: List<LabeledPrice>,
+        providerToken: String? = null,
+        maxTipAmount: Int? = null,
+        suggestedTipAmounts: List<Int>? = null,
+        startParameter: String? = null,
+        providerData: String? = null,
+        photoUrl: String? = null,
+        photoSize: Int? = null,
+        photoWidth: Int? = null,
+        photoHeight: Int? = null,
+        needName: Boolean? = null,
+        needPhoneNumber: Boolean? = null,
+        needEmail: Boolean? = null,
+        needShippingAddress: Boolean? = null,
+        sendPhoneNumberToProvider: Boolean? = null,
+        sendEmailToProvider: Boolean? = null,
+        isFlexible: Boolean? = null,
+    ) = service.createInvoiceLink(title, description, payload, providerToken, currency, prices.toTelegramList(), maxTipAmount, suggestedTipAmounts?.toTelegramList(), startParameter, providerData, photoUrl, photoSize, photoWidth, photoHeight, needName, needPhoneNumber, needEmail, needShippingAddress, sendPhoneNumberToProvider, sendEmailToProvider, isFlexible).getResult()
+
+    suspend fun answerShippingQuery(
+        shippingQueryId: String,
+        ok: Boolean,
+        shippingOptions: List<ShippingOption>? = null,
+        errorMessage: String? = null,
+    ) = service.answerShippingQuery(shippingQueryId, ok, shippingOptions?.toTelegramList(), errorMessage).getResult()
+
+    suspend fun answerPreCheckoutQuery(
+        preCheckoutQueryId: String,
+        ok: Boolean,
+        errorMessage: String? = null,
+    ) = service.answerPreCheckoutQuery(preCheckoutQueryId, ok, errorMessage).getResult()
+
+    suspend fun refundStarsPayment(
+        userId: Long,
+        telegramPaymentChargeId: String,
+    ) = service.refundStarPayment(userId, telegramPaymentChargeId).getResult()
 }
 
 fun getAllUpdates() = listOf(

@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class Bot (
     token: String,
-    session: TelegramApiService? = null,
     default: DefaultBotProperties? = null,
 ) {
     private val stopSignal = AtomicBoolean(false)

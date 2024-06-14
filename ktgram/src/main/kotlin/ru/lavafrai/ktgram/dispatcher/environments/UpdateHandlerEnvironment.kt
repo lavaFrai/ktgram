@@ -1,4 +1,4 @@
-package ru.lavafrai.ktgram.dispatcher.scopes
+package ru.lavafrai.ktgram.dispatcher.environments
 
 import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.types.Update

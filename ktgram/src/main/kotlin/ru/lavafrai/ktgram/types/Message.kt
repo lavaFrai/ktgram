@@ -28,6 +28,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
+import ru.lavafrai.ktgram.types.payments.Invoice
+import ru.lavafrai.ktgram.types.payments.LabeledPrice
+import ru.lavafrai.ktgram.types.payments.SuccessfulPayment
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 
 /**
@@ -176,8 +179,8 @@ class Message(
     @SerialName("migrate_to_chat_id") val migrateToChatId: Long? = null,
     @SerialName("migrate_from_chat_id") val migrateFromChatId: Long? = null,
     // @SerialName("pinned_message") val pinnedMessage: MaybeInaccessibleMessage? = null,
-    // @SerialName("invoice") val invoice: Invoice? = null,
-    // @SerialName("successful_payment") val successfulPayment: SuccessfulPayment? = null,
+    @SerialName("invoice") val invoice: Invoice? = null,
+    @SerialName("successful_payment") val successfulPayment: SuccessfulPayment? = null,
     @SerialName("users_shared") val usersShared: UsersShared? = null,
     @SerialName("chat_shared") val chatShared: ChatShared? = null,
     @SerialName("connected_website") val connectedWebsite: String? = null,
@@ -709,6 +712,126 @@ class Message(
         )
     }
 
+    suspend fun answerInvoice(
+        title: String,
+        description: String,
+        payload: String,
+        currency: String,
+        prices: List<LabeledPrice>,
+        providerToken: String? = null,
+        messageThreadId: String? = null,
+        maxTipAmount: Int? = null,
+        suggestedTipAmounts: List<Int>? = null,
+        startParameter: String? = null,
+        providerData: String? = null,
+        photoUrl: String? = null,
+        photoSize: Int? = null,
+        photoWidth: Int? = null,
+        photoHeight: Int? = null,
+        needName: Boolean? = null,
+        needPhoneNumber: Boolean? = null,
+        needEmail: Boolean? = null,
+        needShippingAddress: Boolean? = null,
+        sendPhoneNumberToProvider: Boolean? = null,
+        sendEmailToProvider: Boolean? = null,
+        isFlexible: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.api.sendInvoice(
+            chat.id,
+            title,
+            description,
+            payload,
+            currency,
+            prices,
+            providerToken = providerToken,
+            messageThreadId = messageThreadId,
+            maxTipAmount = maxTipAmount,
+            suggestedTipAmounts = suggestedTipAmounts,
+            startParameter = startParameter,
+            providerData = providerData,
+            photoUrl = photoUrl,
+            photoSize = photoSize,
+            photoWidth = photoWidth,
+            photoHeight = photoHeight,
+            needName = needName,
+            needPhoneNumber = needPhoneNumber,
+            needEmail = needEmail,
+            needShippingAddress = needShippingAddress,
+            sendPhoneNumberToProvider = sendPhoneNumberToProvider,
+            sendEmailToProvider = sendEmailToProvider,
+            isFlexible = isFlexible,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyInvoice(
+        title: String,
+        description: String,
+        payload: String,
+        currency: String,
+        prices: List<LabeledPrice>,
+        providerToken: String? = null,
+        messageThreadId: String? = null,
+        maxTipAmount: Int? = null,
+        suggestedTipAmounts: List<Int>? = null,
+        startParameter: String? = null,
+        providerData: String? = null,
+        photoUrl: String? = null,
+        photoSize: Int? = null,
+        photoWidth: Int? = null,
+        photoHeight: Int? = null,
+        needName: Boolean? = null,
+        needPhoneNumber: Boolean? = null,
+        needEmail: Boolean? = null,
+        needShippingAddress: Boolean? = null,
+        sendPhoneNumberToProvider: Boolean? = null,
+        sendEmailToProvider: Boolean? = null,
+        isFlexible: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.api.sendInvoice(
+            chat.id,
+            title,
+            description,
+            payload,
+            currency,
+            prices,
+            providerToken = providerToken,
+            messageThreadId = messageThreadId,
+            maxTipAmount = maxTipAmount,
+            suggestedTipAmounts = suggestedTipAmounts,
+            startParameter = startParameter,
+            providerData = providerData,
+            photoUrl = photoUrl,
+            photoSize = photoSize,
+            photoWidth = photoWidth,
+            photoHeight = photoHeight,
+            needName = needName,
+            needPhoneNumber = needPhoneNumber,
+            needEmail = needEmail,
+            needShippingAddress = needShippingAddress,
+            sendPhoneNumberToProvider = sendPhoneNumberToProvider,
+            sendEmailToProvider = sendEmailToProvider,
+            isFlexible = isFlexible,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
     suspend fun forward(
         chatId: Long,
         disableNotification: Boolean? = null,
@@ -838,8 +961,8 @@ class Message(
                 migrateToChatId != null -> MessageType.MigrateToChatId
                 migrateFromChatId != null -> MessageType.MigrateFromChatId
                 // pinnedMessage != null -> MessageType.PinnedMessage
-                // invoice != null -> MessageType.Invoice
-                // successfulPayment != null -> MessageType.SuccessfulPayment
+                invoice != null -> MessageType.Invoice
+                successfulPayment != null -> MessageType.SuccessfulPayment
                 connectedWebsite != null -> MessageType.ConnectedWebsite
                 // passportData != null -> MessageType.PassportData
                 proximityAlertTriggered != null -> MessageType.ProximityAlert

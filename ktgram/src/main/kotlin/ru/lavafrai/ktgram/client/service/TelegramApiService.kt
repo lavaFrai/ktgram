@@ -12,6 +12,7 @@ import ForumTopic
 import ReactionType
 import ReplyParameters
 import UserChatBoosts
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import ktgram.types.stickers.Sticker
 import okhttp3.*
@@ -27,9 +28,13 @@ import ru.lavafrai.ktgram.types.media.File
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.UserProfilePhotos
+import ru.lavafrai.ktgram.types.payments.LabeledPrice
+import ru.lavafrai.ktgram.types.payments.ShippingOption
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.poll.Poll
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
+import java.net.InetSocketAddress
+import java.net.Proxy
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
@@ -903,6 +908,89 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long,
         @Field("message_ids") messageIds: TelegramList<Int>,
     ): TelegramResult<Boolean>
+
+    @FormUrlEncoded
+    @POST("sendInvoice")
+    suspend fun sendInvoice(
+        @Field("chat_id") chatId: Long,
+        @Field("message_thread_id") messageThreadId: String?,
+        @Field("title") title: String,
+        @Field("description") description: String,
+        @Field("payload") payload: String,
+        @Field("provider_token") providerToken: String?,
+        @Field("currency") currency: String,
+        @Field("prices") prices: TelegramList<LabeledPrice>,
+        @Field("max_tip_amount") maxTipAmount: Int?,
+        @Field("suggested_tip_amounts") suggestedTipAmounts: TelegramList<Int>?,
+        @Field("start_parameter") startParameter: String?,
+        @Field("provider_data") providerData: String?,
+        @Field("photo_url") photoUrl: String?,
+        @Field("photo_size") photoSize: Int?,
+        @Field("photo_width") photoWidth: Int?,
+        @Field("photo_height") photoHeight: Int?,
+        @Field("need_name") needName: Boolean?,
+        @Field("need_phone_number") needPhoneNumber: Boolean?,
+        @Field("need_email") needEmail: Boolean?,
+        @Field("need_shipping_address") needShippingAddress: Boolean?,
+        @Field("send_phone_number_to_provider") sendPhoneNumberToProvider: Boolean?,
+        @Field("send_email_to_provider") sendEmailToProvider: Boolean?,
+        @Field("is_flexible") isFlexible: Boolean?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("protect_content") protectContent: Boolean?,
+        @Field("message_effect_id") messageEffectId: String?,
+        @Field("reply_parameters") replyParameters: ReplyParameters?,
+        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+    ): TelegramResult<Message>
+
+    @FormUrlEncoded
+    @POST("createInvoiceLink")
+    suspend fun createInvoiceLink(
+        @Field("title") title: String,
+        @Field("description") description: String,
+        @Field("payload") payload: String,
+        @Field("provider_token") providerToken: String?,
+        @Field("currency") currency: String,
+        @Field("prices") prices: TelegramList<LabeledPrice>,
+        @Field("max_tip_amount") maxTipAmount: Int?,
+        @Field("suggested_tip_amounts") suggestedTipAmounts: TelegramList<Int>?,
+        @Field("start_parameter") startParameter: String?,
+        @Field("provider_data") providerData: String?,
+        @Field("photo_url") photoUrl: String?,
+        @Field("photo_size") photoSize: Int?,
+        @Field("photo_width") photoWidth: Int?,
+        @Field("photo_height") photoHeight: Int?,
+        @Field("need_name") needName: Boolean?,
+        @Field("need_phone_number") needPhoneNumber: Boolean?,
+        @Field("need_email") needEmail: Boolean?,
+        @Field("need_shipping_address") needShippingAddress: Boolean?,
+        @Field("send_phone_number_to_provider") sendPhoneNumberToProvider: Boolean?,
+        @Field("send_email_to_provider") sendEmailToProvider: Boolean?,
+        @Field("is_flexible") isFlexible: Boolean?,
+    ): TelegramResult<String>
+
+    @FormUrlEncoded
+    @POST("answerShippingQuery")
+    suspend fun answerShippingQuery(
+        @Field("shipping_query_id") shippingQueryId: String,
+        @Field("ok") ok: Boolean,
+        @Field("shipping_options") shippingOptions: TelegramList<ShippingOption>?,
+        @Field("error_message") errorMessage: String?,
+    ): TelegramResult<Boolean>
+
+    @FormUrlEncoded
+    @POST("answerPreCheckoutQuery")
+    suspend fun answerPreCheckoutQuery(
+        @Field("pre_checkout_query_id") preCheckoutQueryId: String,
+        @Field("ok") ok: Boolean,
+        @Field("error_message") errorMessage: String?,
+    ): TelegramResult<Boolean>
+
+    @FormUrlEncoded
+    @POST("refundStarPayment")
+    suspend fun refundStarPayment(
+        @Field("user_id") userId: Long,
+        @Field("telegram_payment_charge_id") telegramPaymentChargeId: String,
+    ): TelegramResult<Boolean>
 }
 
 const val PRODUCTION = "https://api.telegram.org/bot{token}/"
@@ -944,11 +1032,15 @@ class TgInterceptor(val log: Logger = LoggerFactory.getLogger(TgInterceptor::cla
     }
 }
 
+
+val proxy = Proxy(Proxy.Type.HTTP, InetSocketAddress("127.0.0.1", 8080))
+
 val okHttpClient: OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(TgInterceptor())
     .callTimeout(10.minutes.toJavaDuration())
     .readTimeout(10.minutes.toJavaDuration())
     .writeTimeout(10.minutes.toJavaDuration())
+    // .proxy(proxy)
     .build()
 
 fun productionTelegramApiService(token: String, json: Json? = null): TelegramApiService {

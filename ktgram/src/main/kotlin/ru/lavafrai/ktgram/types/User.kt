@@ -29,7 +29,7 @@ class User(
     @SerialName("last_name") val lastName: String? = null,
     @SerialName("username") val username: String? = null,
     @SerialName("language_code") val languageCode: String? = null,
-    @SerialName("is_premium") val isPremium: String? = null,
+    @SerialName("is_premium") val isPremium: Boolean? = null,
     @SerialName("added_to_attachment_menu") val addedToAttachmentMenu: String? = null,
     @SerialName("can_join_groups") val canJoinGroups: Boolean? = null,
     @SerialName("can_read_all_group_messages") val canReadAllGroupMessages: Boolean? = null,

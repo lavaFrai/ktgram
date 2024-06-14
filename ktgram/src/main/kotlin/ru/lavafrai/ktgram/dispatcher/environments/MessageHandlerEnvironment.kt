@@ -1,6 +1,6 @@
 package ktgram.dispatcher.environments
 
-import ru.lavafrai.ktgram.dispatcher.scopes.UpdateHandlerEnvironment
+import ru.lavafrai.ktgram.dispatcher.environments.UpdateHandlerEnvironment
 import ru.lavafrai.ktgram.types.Message
 import ru.lavafrai.ktgram.types.Update
 
