@@ -23,19 +23,16 @@ import ru.lavafrai.ktgram.dispatcher.Dispatcher
 import ru.lavafrai.ktgram.dispatcher.dsl.text
 
 
-fun Dispatcher.addHandlers() {
-    text {
-        message.reply("You said: ${message.text}")
-    }
-}
-
-
 fun main() {
     val bot = Bot("<Your token>")
 
     val dispatcher = bot.dispatcher
-    dispatcher.handling {
-        addHandlers()
+    dispatcher.routing {
+        text {
+            handle {
+                update.message!!.reply("You said: ${message.text}")
+            }
+        }
     }
 
     bot.runPolling()
