@@ -24,6 +24,9 @@ import retrofit2.http.*
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.business.BusinessConnection
+import ru.lavafrai.ktgram.types.inline.SentWebAppMessage
+import ru.lavafrai.ktgram.types.inline.inlineQueryResult.InlineQueryResult
+import ru.lavafrai.ktgram.types.inline.inlineQueryResult.InlineQueryResultsButton
 import ru.lavafrai.ktgram.types.media.File
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
@@ -991,6 +994,24 @@ interface TelegramApiService {
         @Field("user_id") userId: Long,
         @Field("telegram_payment_charge_id") telegramPaymentChargeId: String,
     ): TelegramResult<Boolean>
+
+    @FormUrlEncoded
+    @POST("answerInlineQuery")
+    suspend fun answerInlineQuery(
+        @Field("inline_query_id") inlineQueryId: String,
+        @Field("results") results: TelegramList<InlineQueryResult>,
+        @Field("cache_time") cacheTime: Int?,
+        @Field("is_personal") isPersonal: Boolean?,
+        @Field("next_offset") nextOffset: String?,
+        @Field("button") button: InlineQueryResultsButton?,
+    ): TelegramResult<Boolean>
+
+    @FormUrlEncoded
+    @POST("answerWebAppQuery")
+    suspend fun answerWebAppQuery(
+        @Field("web_app_query_id") webAppQueryId: String,
+        @Field("result") result: InlineQueryResult,
+    ): TelegramResult<SentWebAppMessage>
 }
 
 const val PRODUCTION = "https://api.telegram.org/bot{token}/"
@@ -1040,12 +1061,13 @@ val okHttpClient: OkHttpClient = OkHttpClient.Builder()
     .callTimeout(10.minutes.toJavaDuration())
     .readTimeout(10.minutes.toJavaDuration())
     .writeTimeout(10.minutes.toJavaDuration())
-    // .proxy(proxy)
+    .proxy(proxy)
     .build()
 
 fun productionTelegramApiService(token: String, json: Json? = null): TelegramApiService {
     val tolerantJson = json ?: Json {
-        ignoreUnknownKeys = true
+        ignoreUnknownKeys = true;
+        encodeDefaults = true
     }
 
     val client = okHttpClient

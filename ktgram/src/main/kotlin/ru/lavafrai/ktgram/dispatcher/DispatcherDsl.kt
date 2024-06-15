@@ -3,6 +3,7 @@ package ru.lavafrai.ktgram.dispatcher
 import ru.lavafrai.ktgram.dispatcher.handlers.*
 import ktgram.dispatcher.environments.MessageHandlerEnvironment
 import ru.lavafrai.ktgram.dispatcher.environments.CallbackQueryHandlerEnvironment
+import ru.lavafrai.ktgram.dispatcher.environments.InlineQueryHandlerEnvironment
 import ru.lavafrai.ktgram.dispatcher.environments.UpdateHandlerEnvironment
 import ru.lavafrai.ktgram.types.MessageType
 import ru.lavafrai.ktgram.types.UpdateType
@@ -55,6 +56,13 @@ fun Dispatcher.invoice(vararg filters: MessageFilter, handle: suspend MessageHan
     filtersList.add { message.type == MessageType.Invoice }
 
     val handler = MessageHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
+    addHandler(handler)
+}
+
+fun Dispatcher.inlineQuery(vararg filters: InlineQueryFilter, handle: suspend InlineQueryHandlerEnvironment.() -> Unit) {
+    val filtersList = filters.toMutableList()
+
+    val handler = InlineQueryHandler(*filtersList.toTypedArray(), handler=handle, dispatcher = this)
     addHandler(handler)
 }
 

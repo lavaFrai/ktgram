@@ -11,7 +11,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.ktgram.types.business.BusinessConnection
 import ru.lavafrai.ktgram.types.business.BusinessMessagesDeleted
+import ru.lavafrai.ktgram.types.inline.ChosenInlineResult
+import ru.lavafrai.ktgram.types.inline.InlineQuery
 import ru.lavafrai.ktgram.types.payments.PreCheckoutQuery
+import ru.lavafrai.ktgram.types.payments.ShippingQuery
 import ru.lavafrai.ktgram.types.poll.Poll
 import ru.lavafrai.ktgram.types.poll.PollAnswer
 
@@ -56,10 +59,10 @@ class Update(
     @SerialName("deleted_business_messages") val deletedBusinessMessages: BusinessMessagesDeleted? = null,
     @SerialName("message_reaction") val messageReaction: MessageReactionUpdated? = null,
     @SerialName("message_reaction_count") val messageReactionCount: MessageReactionCountUpdated? = null,
-    // @SerialName("inline_query") val inlineQuery: InlineQuery? = null,
-    // @SerialName("chosen_inline_result") val chosenInlineResult: ChosenInlineResult? = null,
+    @SerialName("inline_query") val inlineQuery: InlineQuery? = null,
+    @SerialName("chosen_inline_result") val chosenInlineResult: ChosenInlineResult? = null,
     @SerialName("callback_query") val callbackQuery: CallbackQuery? = null,
-    // @SerialName("shipping_query") val shippingQuery: ShippingQuery? = null,
+    @SerialName("shipping_query") val shippingQuery: ShippingQuery? = null,
     @SerialName("pre_checkout_query") val preCheckoutQuery: PreCheckoutQuery? = null,
     @SerialName("poll") val poll: Poll? = null,
     @SerialName("poll_answer") val pollAnswer: PollAnswer? = null,
@@ -86,6 +89,14 @@ class Update(
                 removedChatBoost != null -> UpdateType.RemovedChatBoost
                 poll != null -> UpdateType.Poll
                 preCheckoutQuery != null -> UpdateType.PreCheckoutQuery
+                shippingQuery != null -> UpdateType.ShippingQuery
+                businessConnection != null -> UpdateType.BusinessConnection
+                businessMessage != null -> UpdateType.BusinessMessage
+                editedBusinessMessage != null -> UpdateType.EditedBusinessMessage
+                deletedBusinessMessages != null -> UpdateType.DeletedBusinessMessages
+                inlineQuery != null -> UpdateType.InlineQuery
+                chosenInlineResult != null -> UpdateType.ChosenInlineResult
+
 
                 else -> UpdateType.Unknown
             }

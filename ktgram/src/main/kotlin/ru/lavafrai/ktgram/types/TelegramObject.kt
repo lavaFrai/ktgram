@@ -10,6 +10,15 @@ open class TelegramObject(): BotContextMixin() {
     override fun toString(): String {
         val serializer = this.javaClass.kotlin.serializer()
 
-        return Json.encodeToString(serializer, this)
+        return tolerantJson.encodeToString(serializer, this)
+    }
+
+    companion object {
+        @OptIn(ExperimentalSerializationApi::class)
+        val tolerantJson = Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+            explicitNulls = false
+        }
     }
 }

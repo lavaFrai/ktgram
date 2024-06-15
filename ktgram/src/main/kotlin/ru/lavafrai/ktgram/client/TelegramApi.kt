@@ -7,12 +7,13 @@ import ReactionType
 import ReplyParameters
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
-import retrofit2.http.Field
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.client.service.factories.MediaGroupBodyFactory
 import ru.lavafrai.ktgram.client.service.getClient
 import ru.lavafrai.ktgram.client.service.productionTelegramApiService
 import ru.lavafrai.ktgram.types.*
+import ru.lavafrai.ktgram.types.inline.inlineQueryResult.InlineQueryResult
+import ru.lavafrai.ktgram.types.inline.inlineQueryResult.InlineQueryResultsButton
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
@@ -24,7 +25,7 @@ import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 
 class TelegramApi(
     private val bot: Bot,
-    private val json: Json = Json { ignoreUnknownKeys = true },
+    val json: Json = TelegramObject.tolerantJson,
     private val service: TelegramApiService = productionTelegramApiService(bot.token, json),
     private val mediaGroupBodyFactory: MediaGroupBodyFactory = MediaGroupBodyFactory(json),
 ) {
@@ -813,6 +814,20 @@ class TelegramApi(
         userId: Long,
         telegramPaymentChargeId: String,
     ) = service.refundStarPayment(userId, telegramPaymentChargeId).getResult()
+
+    suspend fun answerInlineQuery(
+        inlineQueryId: String,
+        results: List<InlineQueryResult>,
+        cacheTime: Int? = null,
+        isPersonal: Boolean? = null,
+        nextOffset: String? = null,
+        button: InlineQueryResultsButton? = null,
+    ) = service.answerInlineQuery(inlineQueryId, results.toTelegramList(), cacheTime, isPersonal, nextOffset, button).getResult()
+
+    suspend fun answerWebAppQuery(
+        webAppQueryId: String,
+        result: InlineQueryResult,
+    ) = service.answerWebAppQuery(webAppQueryId, result).getResult(bot)
 }
 
 fun getAllUpdates() = listOf(

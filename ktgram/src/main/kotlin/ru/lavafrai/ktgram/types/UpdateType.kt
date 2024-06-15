@@ -18,7 +18,7 @@ enum class UpdateType {
     MessageReaction,
     ChatBoost,
     RemovedChatBoost,
-    DeletedBusinessMessage,
+    DeletedBusinessMessages,
     BusinessConnection,
     EditedBusinessMessage,
     BusinessMessage,
