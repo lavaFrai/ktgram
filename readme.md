@@ -59,7 +59,7 @@ dependencies {
 
 ## Roadmap
 - [x] Basic functionality
-- [ ] State machine
+- [x] State machine
 - [ ] Middlewares
 - [ ] Integrated i18n
 - [ ] Documentation

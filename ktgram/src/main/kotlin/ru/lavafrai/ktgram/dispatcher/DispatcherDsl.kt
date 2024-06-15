@@ -60,6 +60,12 @@ fun Router.state(state: String, content: Router.() -> Unit) {
     }
 }
 
+fun Router.stateStartsWith(prefix: String, content: Router.() -> Unit) {
+    addSubRouter(content) {
+        getState()?.startsWith(prefix) ?: false
+    }
+}
+
 fun Router.stateLess(content: Router.() -> Unit) {
     addSubRouter(content) {
         null == getState()
