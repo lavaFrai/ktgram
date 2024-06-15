@@ -1061,7 +1061,7 @@ val okHttpClient: OkHttpClient = OkHttpClient.Builder()
     .callTimeout(10.minutes.toJavaDuration())
     .readTimeout(10.minutes.toJavaDuration())
     .writeTimeout(10.minutes.toJavaDuration())
-    .proxy(proxy)
+    // .proxy(proxy)
     .build()
 
 fun productionTelegramApiService(token: String, json: Json? = null): TelegramApiService {

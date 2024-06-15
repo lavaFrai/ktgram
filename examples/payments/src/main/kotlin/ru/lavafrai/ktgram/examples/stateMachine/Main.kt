@@ -1,11 +1,8 @@
-package ru.lavafrai.ktgram.examples.payments
+package ru.lavafrai.ktgram.examples.stateMachine
 
 import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.*
-import ru.lavafrai.ktgram.dispatcher.message
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
-import ru.lavafrai.ktgram.types.MessageType
-import ru.lavafrai.ktgram.types.payments.LabeledPrice
 import ru.lavafrai.ktgram.types.payments.simplePrice
 
 fun Dispatcher.addHandlers() {

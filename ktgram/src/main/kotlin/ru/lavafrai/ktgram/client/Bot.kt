@@ -11,6 +11,9 @@ import ru.gildor.coroutines.okhttp.await
 import ru.lavafrai.ktgram.client.updateProvider.UpdateProvider
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
+import ru.lavafrai.ktgram.stateMachine.StateMachine
+import ru.lavafrai.ktgram.stateMachine.storage.BotStorage
+import ru.lavafrai.ktgram.stateMachine.storage.MemoryStorage
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.MessageEntity
@@ -24,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class Bot (
     token: String,
     default: DefaultBotProperties? = null,
+    val storage: BotStorage = MemoryStorage()
 ) {
     private val stopSignal = AtomicBoolean(false)
     private val _token: String
@@ -34,6 +38,7 @@ class Bot (
     private val updateFlow: Flow<Update>
     private val handlerScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
     val dispatcher = Dispatcher(this)
+    val stateMachine = StateMachine(this, storage)
 
     init {
         validateToken(token)

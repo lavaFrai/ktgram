@@ -97,8 +97,53 @@ class Update(
                 inlineQuery != null -> UpdateType.InlineQuery
                 chosenInlineResult != null -> UpdateType.ChosenInlineResult
 
-
                 else -> UpdateType.Unknown
             }
+        }
+
+    val from: User?
+        get() = when (type) {
+            UpdateType.Message -> message?.from
+            UpdateType.EditedMessage -> editedMessage?.from
+            UpdateType.ChannelPost -> channelPost?.from
+            UpdateType.EditedChannelPost -> editedChannelPost?.from
+            UpdateType.CallbackQuery -> callbackQuery?.from
+            UpdateType.PollAnswer -> pollAnswer?.user
+            UpdateType.MyChatMember -> myChatMember?.from
+            UpdateType.ChatMember -> chatMember?.from
+            UpdateType.ChatJoinRequest -> chatJoinRequest?.from
+            UpdateType.MessageReaction -> messageReaction?.user
+            UpdateType.ChatBoost -> chatBoost?.boost?.source?.user
+            UpdateType.RemovedChatBoost -> removedChatBoost?.source?.user
+            UpdateType.BusinessConnection -> businessConnection?.user
+            UpdateType.BusinessMessage -> businessMessage?.from
+            UpdateType.EditedBusinessMessage -> editedBusinessMessage?.from
+            UpdateType.DeletedBusinessMessages -> null
+            UpdateType.InlineQuery -> inlineQuery?.from
+            UpdateType.ChosenInlineResult -> chosenInlineResult?.from
+            else -> null
+        }
+
+    val chat: Chat?
+        get() = when (type) {
+            UpdateType.Message -> message?.chat
+            UpdateType.EditedMessage -> editedMessage?.chat
+            UpdateType.ChannelPost -> channelPost?.chat
+            UpdateType.EditedChannelPost -> editedChannelPost?.chat
+            UpdateType.CallbackQuery -> callbackQuery?.message?.chat
+            UpdateType.PollAnswer -> pollAnswer?.voterChat
+            UpdateType.MyChatMember -> myChatMember?.chat
+            UpdateType.ChatMember -> chatMember?.chat
+            UpdateType.ChatJoinRequest -> chatJoinRequest?.chat
+            UpdateType.MessageReaction -> messageReaction?.chat
+            UpdateType.ChatBoost -> chatBoost?.chat
+            UpdateType.RemovedChatBoost -> removedChatBoost?.chat
+            UpdateType.BusinessConnection -> null
+            UpdateType.BusinessMessage -> businessMessage?.chat
+            UpdateType.EditedBusinessMessage -> editedBusinessMessage?.chat
+            UpdateType.DeletedBusinessMessages -> null
+            UpdateType.InlineQuery -> null
+            UpdateType.ChosenInlineResult -> null
+            else -> null
         }
 }
