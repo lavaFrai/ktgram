@@ -64,3 +64,5 @@ fun inlineKeyboard(content: InlineKeyboardEnvironment.() -> Unit): InlineKeyboar
 
     return environment.build()
 }
+
+fun removeInlineKeyboard() = inlineKeyboard {}

@@ -32,6 +32,7 @@ import ru.lavafrai.ktgram.types.payments.Invoice
 import ru.lavafrai.ktgram.types.payments.LabeledPrice
 import ru.lavafrai.ktgram.types.payments.SuccessfulPayment
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
+import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.InlineKeyboardMarkup
 
 /**
  * This object represents a message.
@@ -875,7 +876,7 @@ class Message(
         parseMode: String? = null,
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message {
         return bot.api.editMessageText(
             chat.id,
@@ -893,7 +894,7 @@ class Message(
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message {
         return bot.api.editMessageCaption(
             chat.id,
@@ -908,7 +909,7 @@ class Message(
 
     suspend fun editMedia(
         media: InputMedia,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message {
         return bot.api.editMessageMedia(
             chat.id,
@@ -919,7 +920,7 @@ class Message(
     }
 
     suspend fun editReplyMarkup(
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message {
         return bot.api.editMessageReplyMarkup(
             chat.id,

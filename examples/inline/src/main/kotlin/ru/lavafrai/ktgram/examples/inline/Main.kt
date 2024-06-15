@@ -2,43 +2,44 @@ package ru.lavafrai.ktgram.examples.inline
 
 import kotlinx.serialization.encodeToString
 import ru.lavafrai.ktgram.client.Bot
-import ru.lavafrai.ktgram.dispatcher.Dispatcher
-import ru.lavafrai.ktgram.dispatcher.inlineQuery
-import ru.lavafrai.ktgram.dispatcher.invoice
+import ru.lavafrai.ktgram.dispatcher.*
 import ru.lavafrai.ktgram.types.inline.inlineQueryResult.InlineQueryResultVenue
 import ru.lavafrai.ktgram.types.inline.inlineQueryResult.answer
 import ru.lavafrai.ktgram.types.inline.inputMessageContent.InputInvoiceMessageContent
 import ru.lavafrai.ktgram.types.payments.simplePrice
 import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.inlineKeyboard
 
-fun Dispatcher.addHandlers() {
-
+fun Router.addHandlers() {
     inlineQuery {
-        val inlineKeyboard = inlineKeyboard {
-            row {
-                urlButton("Google", "https://google.com")
-                urlButton("Yandex", "https://yandex.ru")
+        handle {
+            val query = update.inlineQuery!!
+
+            val inlineKeyboard = inlineKeyboard {
+                row {
+                    urlButton("Google", "https://google.com")
+                    urlButton("Yandex", "https://yandex.ru")
+                }
+
+                button("Еще какая то хуйня", "nothing")
             }
 
-            button("Еще какая то хуйня", "nothing")
-        }
-
-        val invoice = InputInvoiceMessageContent(
-            title = "Cake",
-            description = "Really awesome cake",
-            payload = "cake",
-            currency = "XTR",
-            prices = simplePrice(1, "cake"),
-        )
-
-        query.answer {
-            location(55.7558f, 37.6176f, "Moscow", inputMessageContent = invoice)
-            photo(
-                "https://filesamples.com/samples/image/jpeg/sample_1920%C3%971280.jpeg",
-                "https://filesamples.com/samples/image/jpeg/sample_1920%C3%971280.jpeg",
-                inputMessageContent = invoice,
-                id="ada"
+            val invoice = InputInvoiceMessageContent(
+                title = "Cake",
+                description = "Really awesome cake",
+                payload = "cake",
+                currency = "XTR",
+                prices = simplePrice(1, "cake"),
             )
+
+            query.answer {
+                location(55.7558f, 37.6176f, "Moscow", inputMessageContent = invoice)
+                photo(
+                    "https://filesamples.com/samples/image/jpeg/sample_1920%C3%971280.jpeg",
+                    "https://filesamples.com/samples/image/jpeg/sample_1920%C3%971280.jpeg",
+                    inputMessageContent = invoice,
+                    id = "ada"
+                )
+            }
         }
     }
 }
@@ -58,7 +59,7 @@ fun main() {
     ).let(::println)
 
     val dispatcher = bot.dispatcher
-    dispatcher.handling {
+    dispatcher.routing {
         addHandlers()
     }
 

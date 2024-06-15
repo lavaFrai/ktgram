@@ -1,31 +1,35 @@
 package ru.lavafrai.ktgram.dispatcher
 
 import ru.lavafrai.ktgram.client.Bot
-import ru.lavafrai.ktgram.dispatcher.handlers.Handler
-import ru.lavafrai.ktgram.dispatcher.handlers.UpdateHandler
 import ru.lavafrai.ktgram.types.Update
 
 class Dispatcher(
     val bot: Bot,
+    val strategy: DispatcherStrategy = DispatcherStrategy.HANDLE_ALL,
 ) {
-    private val updateHandlers = mutableListOf<Handler>()
-
-    fun handling(configure: Dispatcher.() -> Unit) {
-        configure()
+    enum class DispatcherStrategy {
+        HANDLE_ONE,
+        HANDLE_ALL,
     }
 
+    private val routers = mutableListOf<Router>()
+
     suspend fun handleUpdate(update: Update): Boolean {
-        updateHandlers.forEach { handler ->
-            if (handler.predict(update)) {
-                handler.handle(update)
-                return true
+        var handled = false
+
+        routers.forEach { router ->
+            if (router.canHandle(update)) {
+                router.handleUpdate(update)
+                handled = true
+
+                if (strategy == DispatcherStrategy.HANDLE_ONE) return handled
             }
         }
 
-        return false
+        return handled
     }
 
-    fun addHandler(handler: Handler) {
-        updateHandlers.add(handler)
+    fun addRouter(router: Router) {
+        routers.add(router)
     }
 }

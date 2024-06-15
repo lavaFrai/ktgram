@@ -22,6 +22,7 @@ import ru.lavafrai.ktgram.types.payments.LabeledPrice
 import ru.lavafrai.ktgram.types.payments.ShippingOption
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
+import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.InlineKeyboardMarkup
 
 class TelegramApi(
     private val bot: Bot,
@@ -677,7 +678,7 @@ class TelegramApi(
         parseMode: String? = null,
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ) = service.editMessageText(chatId, messageId, inlineMessageId, text, parseMode, entities?.toTelegramList(), linkPreviewOptions, replyMarkup).getResult(bot)
 
     suspend fun editMessageCaption(
@@ -688,7 +689,7 @@ class TelegramApi(
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ) = service.editMessageCaption(chatId, messageId, inlineMessageId, caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, replyMarkup).getResult(bot)
 
     suspend fun editMessageMedia(
@@ -696,20 +697,20 @@ class TelegramApi(
         messageId: Int? = null,
         media: InputMedia,
         inlineMessageId: String? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ) = service.editMessageMedia(chatId, messageId, inlineMessageId, mediaGroupBodyFactory.createMediaGroupBody(listOf(media)), replyMarkup).getResult(bot)
 
     suspend fun editMessageReplyMarkup(
         chatId: Long? = null,
         messageId: Int? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
         inlineMessageId: String? = null,
     ) = service.editMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup).getResult(bot)
 
     suspend fun stopPoll(
         chatId: Long,
         messageId: Int,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ) = service.stopPoll(chatId, messageId, replyMarkup).getResult(bot)
 
     suspend fun deleteMessage(
@@ -732,14 +733,14 @@ class TelegramApi(
         horizontalAccuracy: Float? = null,
         heading: Int? = null,
         proximityAlertRadius: Int? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ) = service.editMessageLiveLocation(chatId, messageId, inlineMessageId, latitude, longitude, livePeriod, horizontalAccuracy, heading, proximityAlertRadius, replyMarkup).getResult(bot)
 
     suspend fun stopMessageLiveLocation(
         chatId: Long? = null,
         messageId: Int? = null,
         inlineMessageId: String? = null,
-        replyMarkup: ReplyMarkup? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ) = service.stopMessageLiveLocation(chatId, messageId, inlineMessageId, replyMarkup).getResult(bot)
 
     suspend fun sendInvoice(

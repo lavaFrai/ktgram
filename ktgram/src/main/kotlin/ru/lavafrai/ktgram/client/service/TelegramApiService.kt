@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.*
+import ru.lavafrai.ktgram.client.service.converters.TelegramListConverterFactory
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.business.BusinessConnection
@@ -36,6 +37,7 @@ import ru.lavafrai.ktgram.types.payments.ShippingOption
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.poll.Poll
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
+import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.InlineKeyboardMarkup
 import java.net.InetSocketAddress
 import java.net.Proxy
 import kotlin.time.Duration.Companion.minutes
@@ -831,7 +833,7 @@ interface TelegramApiService {
         @Field("parse_mode") parseMode: String?,
         @Field("entities") entities: TelegramList<MessageEntity>?,
         @Field("link_preview_options") linkPreviewOptions: LinkPreviewOptions?,
-        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+        @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -844,7 +846,7 @@ interface TelegramApiService {
         @Field("parse_mode") parseMode: String?,
         @Field("caption_entities") captionEntities: TelegramList<MessageEntity>?,
         @Field("show_caption_above_media") showCaptionAboveMedia: Boolean?,
-        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+        @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
     ): TelegramResult<Message>
 
     @Multipart
@@ -854,7 +856,7 @@ interface TelegramApiService {
         @Part("message_id") messageId: Int?,
         @Part("inline_message_id") inlineMessageId: String?,
         @Part media: List<MultipartBody.Part>,
-        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+        @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -869,7 +871,7 @@ interface TelegramApiService {
         @Field("horizontal_accuracy") horizontalAccuracy: Float?,
         @Field("heading") heading: Int?,
         @Field("proximity_alert_radius") proximityAlertRadius: Int?,
-        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+        @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -878,7 +880,7 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long?,
         @Field("message_id") messageId: Int?,
         @Field("inline_message_id") inlineMessageId: String?,
-        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+        @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -887,7 +889,7 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long?,
         @Field("message_id") messageId: Int?,
         @Field("inline_message_id") inlineMessageId: String?,
-        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+        @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -895,7 +897,7 @@ interface TelegramApiService {
     suspend fun stopPoll(
         @Field("chat_id") chatId: Long,
         @Field("message_id") messageId: Int,
-        @Field("reply_markup") replyMarkup: ReplyMarkup?,
+        @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
     ): TelegramResult<Poll>
 
     @FormUrlEncoded
@@ -1075,6 +1077,7 @@ fun productionTelegramApiService(token: String, json: Json? = null): TelegramApi
     return Retrofit.Builder()
         .client(client)
         .baseUrl(PRODUCTION.replace("{token}", token))
+        .addConverterFactory(TelegramListConverterFactory())
         .addConverterFactory(tolerantJson.asConverterFactory(MediaType.get("application/json")))
         .build()
         .create(TelegramApiService::class.java)

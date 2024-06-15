@@ -78,7 +78,6 @@ class Bot (
         try {
             handled = dispatcher.handleUpdate(update)
         } catch (e: Exception) {
-            val handleEndTime = System.currentTimeMillis()
             logger.error("Error while handling update id=${update.updateId}")
             e.printStackTrace()
             return

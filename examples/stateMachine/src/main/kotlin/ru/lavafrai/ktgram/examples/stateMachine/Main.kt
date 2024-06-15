@@ -5,16 +5,22 @@ import ru.lavafrai.ktgram.dispatcher.*
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.stateMachine.setState
 import ru.lavafrai.ktgram.stateMachine.state
+import ru.lavafrai.ktgram.types.MessageType
 import ru.lavafrai.ktgram.types.payments.simplePrice
 
-fun Dispatcher.addHandlers() {
+fun Router.addHandlers() {
     command("start") {
-        val currentState = state.getState(update)
-        if (currentState == null) {
-            message.answer("Hi there, new member!")
-            setState("known")
-        } else {
-            message.answer("Hi again!")
+        state("known") {
+            handle {
+                update.message!!.answer("Hi there again! I've remembered you!")
+            }
+        }
+
+        stateLess {
+            handle {
+                update.message!!.answer("Hello, new user!")
+                setState("known")
+            }
         }
     }
 }
@@ -24,7 +30,7 @@ fun main() {
     val bot = Bot(System.getenv("TELEGRAM_BOT_TOKEN") ?: throw RuntimeException("TELEGRAM_BOT_TOKEN env variable is not set"))
 
     val dispatcher = bot.dispatcher
-    dispatcher.handling {
+    dispatcher.routing {
         addHandlers()
     }
 

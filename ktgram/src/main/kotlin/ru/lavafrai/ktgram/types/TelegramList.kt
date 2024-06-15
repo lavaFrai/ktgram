@@ -1,6 +1,10 @@
 package ru.lavafrai.ktgram.types
 
-class TelegramList<T>(val list: List<T>) {
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+
+@Serializable
+class TelegramList<T>(@Transient val list: List<T> = emptyList()) {
     override fun toString(): String {
         return list.toString()
     }
