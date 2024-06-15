@@ -63,7 +63,8 @@ dependencies {
 - [ ] Middlewares
 - [ ] Integrated i18n
 - [ ] Documentation
-- [ ] Keyboards DSL
+- [x] Keyboards DSL
+- [x] Payments support
 
 ## Thanks
 - [aiogram](https://github.com/aiogram/aiogram) for idea to implement the same functional framework for kotlin and some architecture solutions.
