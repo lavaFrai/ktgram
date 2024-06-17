@@ -57,7 +57,7 @@ dependencies {
 ## Roadmap
 - [x] Basic functionality
 - [x] State machine
-- [ ] Middlewares
+- [x] Middlewares
 - [ ] Integrated i18n
 - [ ] Documentation
 - [x] Keyboards DSL
