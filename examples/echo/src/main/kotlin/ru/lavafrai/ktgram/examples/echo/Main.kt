@@ -3,10 +3,10 @@ package ru.lavafrai.ktgram.examples.echo
 import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.*
 
-fun Router.addHandlers() {
+fun Router<*>.addHandlers() {
     text {
         handle {
-            println(update.message!!.reply("You said: ${update.message!!.text}"))
+            message.reply("You said: ${update.message!!.text}")
         }
     }
 }

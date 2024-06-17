@@ -11,11 +11,13 @@ import ru.gildor.coroutines.okhttp.await
 import ru.lavafrai.ktgram.client.updateProvider.UpdateProvider
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
+import ru.lavafrai.ktgram.dispatcher.middlewares.LoggingMiddleware
 import ru.lavafrai.ktgram.stateMachine.StateMachine
 import ru.lavafrai.ktgram.stateMachine.storage.BotStorage
 import ru.lavafrai.ktgram.stateMachine.storage.MemoryStorage
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.inputfile.InputFile
+import ru.lavafrai.ktgram.types.media.DiceEmoji
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 import ru.lavafrai.ktgram.types.poll.InputPollOption
@@ -34,7 +36,7 @@ class Bot (
     private var default: DefaultBotProperties
     val api: TelegramApi
     private lateinit var me: User
-    private val logger = LoggerFactory.getLogger(Bot::class.java)
+    val logger = LoggerFactory.getLogger(Bot::class.java)
     private val updateFlow: Flow<Update>
     private val handlerScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
     val dispatcher = Dispatcher(this)
@@ -47,6 +49,8 @@ class Bot (
         this.default = default ?: DefaultBotProperties()
         this.api = TelegramApi(this)
         this.updateFlow = UpdateProvider(this, this.default.timeout, stopSignal).getUpdatesFlow()
+
+        dispatcher.addOuterMiddleware(LoggingMiddleware(dispatcher, logger))
     }
 
     suspend fun startPolling() {
@@ -74,18 +78,14 @@ class Bot (
 
     private suspend fun handleUpdate(update: Update) {
         val handleStartTime = System.currentTimeMillis()
-        var handled = false
-        try {
-            handled = dispatcher.handleUpdate(update)
-        } catch (e: Exception) {
-            logger.error("Error while handling update id=${update.updateId}")
-            e.printStackTrace()
-            return
-        }
+        dispatcher.handleUpdate(update)
 
+
+        /*
         val handleEndTime = System.currentTimeMillis()
         if (handled) logger.info("Update id=${update.updateId} type=${update.type} is handled. Duration ${handleEndTime - handleStartTime} ms by bot id=${me.id}")
         else logger.info("Update id=${update.updateId} type=${update.type} is not handled by bot id=${me.id}")
+         */
     }
 
     /**
@@ -446,7 +446,7 @@ class Bot (
      */
     suspend fun sendDice(
         chatId: Long,
-        emoji: String? = null,
+        emoji: DiceEmoji? = null,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         disableNotification: Boolean? = null,
@@ -454,7 +454,7 @@ class Bot (
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = api.sendDice(chatId, emoji, businessConnectionId, messageThreadId, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
+    ) = api.sendDice(chatId, emoji?.emoji, businessConnectionId, messageThreadId, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
 
     /**
      * Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.

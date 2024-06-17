@@ -15,3 +15,12 @@ class Dice(
     @SerialName("emoji") val emoji: String,
     @SerialName("value") val value: Int,
 ) : TelegramObject()
+
+enum class DiceEmoji(val emoji: String) {
+    DICE("🎲"),
+    DART("🎯"),
+    BOWLING("🎳"),
+    BASKETBALL("🏀"),
+    FOOTBALL("⚽"),
+    SLOT_MACHINE("🎰"),
+}

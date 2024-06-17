@@ -4,6 +4,7 @@ import ChatBoostAdded
 import ChatShared
 import ExternalReplyInfo
 import MessageAutoDeleteTimerChanged
+import PollType
 import ProximityAlertTriggered
 import ReactionType
 import ReplyParameters
@@ -31,6 +32,7 @@ import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
 import ru.lavafrai.ktgram.types.payments.Invoice
 import ru.lavafrai.ktgram.types.payments.LabeledPrice
 import ru.lavafrai.ktgram.types.payments.SuccessfulPayment
+import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.InlineKeyboardMarkup
 
@@ -830,6 +832,258 @@ class Message(
             replyMarkup = replyMarkup,
 
             replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerLocation(
+        latitude: Float,
+        longitude: Float,
+        horizontalAccuracy: Float? = null,
+        livePeriod: Int? = null,
+        heading: Int? = null,
+        proximityAlertRadius: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendLocation(
+            chat.id,
+            latitude,
+            longitude,
+            messageThreadId = messageThreadId,
+            horizontalAccuracy = horizontalAccuracy,
+            livePeriod = livePeriod,
+            heading = heading,
+            proximityAlertRadius = proximityAlertRadius,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyLocation(
+        latitude: Float,
+        longitude: Float,
+        horizontalAccuracy: Float? = null,
+        livePeriod: Int? = null,
+        heading: Int? = null,
+        proximityAlertRadius: Int? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendLocation(
+            chat.id,
+            latitude,
+            longitude,
+            messageThreadId = messageThreadId,
+            horizontalAccuracy = horizontalAccuracy,
+            livePeriod = livePeriod,
+            heading = heading,
+            proximityAlertRadius = proximityAlertRadius,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerVenue(
+        latitude: Float,
+        longitude: Float,
+        title: String,
+        address: String,
+        foursquareId: String? = null,
+        foursquareType: String? = null,
+        googlePlaceId: String? = null,
+        googlePlaceType: String? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendVenue(
+            chat.id,
+            latitude,
+            longitude,
+            title,
+            address,
+            messageThreadId = messageThreadId,
+            foursquareId = foursquareId,
+            foursquareType = foursquareType,
+            googlePlaceId = googlePlaceId,
+            googlePlaceType = googlePlaceType,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyVenue(
+        latitude: Float,
+        longitude: Float,
+        title: String,
+        address: String,
+        foursquareId: String? = null,
+        foursquareType: String? = null,
+        googlePlaceId: String? = null,
+        googlePlaceType: String? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendVenue(
+            chat.id,
+            latitude,
+            longitude,
+            title,
+            address,
+            messageThreadId = messageThreadId,
+            foursquareId = foursquareId,
+            foursquareType = foursquareType,
+            googlePlaceId = googlePlaceId,
+            googlePlaceType = googlePlaceType,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerContact(
+        phoneNumber: String,
+        firstName: String,
+        lastName: String? = null,
+        vcard: String? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendContact(
+            chat.id,
+            phoneNumber,
+            firstName,
+            messageThreadId = messageThreadId,
+            lastName = lastName,
+            vcard = vcard,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyContact(
+        phoneNumber: String,
+        firstName: String,
+        lastName: String? = null,
+        vcard: String? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendContact(
+            chat.id,
+            phoneNumber,
+            firstName,
+            messageThreadId = messageThreadId,
+            lastName = lastName,
+            vcard = vcard,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerDice(
+        emoji: DiceEmoji,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendDice(
+            chat.id,
+            emoji,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+        )
+    }
+
+    suspend fun replyDice(
+        emoji: DiceEmoji,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendDice(
+            chat.id,
+            emoji,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
+
+            replyParameters = ReplyParameters(messageId=this.messageId),
+        )
+    }
+
+    suspend fun answerPoll(
+        question: String,
+        options: List<String>,
+        isAnonymous: Boolean? = null,
+        type: PollType? = null,
+        allowsMultipleAnswers: Boolean? = null,
+        correctOptionId: Int? = null,
+        explanation: String? = null,
+        explanationParseMode: String? = null,
+        explanationEntities: List<MessageEntity>? = null,
+        openPeriod: Int? = null,
+        closeDate: Int? = null,
+        isClosed: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message {
+        return bot.sendPoll(
+            chat.id,
+            question,
+            options.map { InputPollOption(it) },
+            messageThreadId = messageThreadId,
+            isAnonymous = isAnonymous,
+            type = type?.type,
+            allowsMultipleAnswers = allowsMultipleAnswers,
+            correctOptionId = correctOptionId,
+            explanation = explanation,
+            explanationParseMode = explanationParseMode,
+            explanationEntities = explanationEntities,
+            openPeriod = openPeriod,
+            closeDate = closeDate,
+            isClosed = isClosed,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyMarkup = replyMarkup,
         )
     }
 

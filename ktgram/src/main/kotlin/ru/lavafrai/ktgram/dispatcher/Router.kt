@@ -1,24 +1,28 @@
 package ru.lavafrai.ktgram.dispatcher
 
-import ru.lavafrai.ktgram.dispatcher.environments.FilterEnvironment
-import ru.lavafrai.ktgram.dispatcher.environments.HandlerEnvironment
+import ru.lavafrai.ktgram.dispatcher.environments.*
+import ru.lavafrai.ktgram.dispatcher.middlewares.Middleware
 import ru.lavafrai.ktgram.types.Update
 
-class Router(val dispatcher: Dispatcher) {
-    constructor(dispatcher: Dispatcher, handler: Handler): this(dispatcher) {
+
+class Router<T: HandlerEnvironment>(val dispatcher: Dispatcher) {
+    constructor(dispatcher: Dispatcher, environmentFactory: EnvironmentFactory<T>, handler: Handler<T>): this(dispatcher) {
+        this.environmentFactory = environmentFactory
         this.handler = handler
     }
 
-    constructor(dispatcher: Dispatcher, filter: Filter, content: Router.() -> Unit): this(dispatcher) {
+    constructor(dispatcher: Dispatcher, environmentFactory: EnvironmentFactory<T>, filter: Filter, content: Router<T>.() -> Unit): this(dispatcher) {
         this.filter = filter
+        this.environmentFactory = environmentFactory
         this.content()
     }
 
-    private val subRoutes = mutableListOf<Router>()
-    private var handler: Handler? = null
+    private val subRoutes = mutableListOf<Router<*>>()
+    private var handler: Handler<T>? = null
     private var filter: Filter? = null
+    lateinit var environmentFactory: EnvironmentFactory<T>
 
-    val isEndpoint: Boolean
+    private val isEndpoint: Boolean
         get() = handler != null
 
     suspend fun canHandle(update: Update): Boolean {
@@ -31,7 +35,7 @@ class Router(val dispatcher: Dispatcher) {
 
     suspend fun handleUpdate(update: Update) {
         if (isEndpoint) {
-            val environment = HandlerEnvironment(update)
+            val environment = getEnvironment(update)
             handler!!.invoke(environment)
             if (dispatcher.strategy == Dispatcher.DispatcherStrategy.HANDLE_ONE) return
         }
@@ -43,34 +47,59 @@ class Router(val dispatcher: Dispatcher) {
         }
     }
 
-    fun addSubRouter(subRoute: Router) {
+    fun addSubRouter(subRoute: Router<*>) {
         subRoutes.add(subRoute)
     }
 
-    fun addSubRouter(content: Router.() -> Unit, filter: Filter) {
-        val router = Router(this.dispatcher, filter, content)
-
+    fun <E: HandlerEnvironment>addSubRouter(environmentFactory: EnvironmentFactory<E>, content: Router<E>.() -> Unit, filter: Filter) {
+        val router = Router<E>(this.dispatcher, environmentFactory, filter, content)
         addSubRouter(router)
+    }
+
+    fun addSubRouter(content: Router<T>.() -> Unit, filter: Filter) {
+        val router = Router<T>(this.dispatcher, environmentFactory, filter, content)
+        addSubRouter(router)
+    }
+
+    private fun getEnvironment(update: Update): T {
+        return environmentFactory.createEnvironment(update)
+    }
+
+    fun addMiddleware(middleware: Middleware) {
+        dispatcher.addMiddleware(middleware)
+    }
+
+    fun addOuterMiddleware(middleware: Middleware) {
+        dispatcher.addOuterMiddleware(middleware)
+    }
+
+    fun addErrorHandler(handler: Handler<ErrorEnvironment>) {
+        dispatcher.addErrorHandler(handler)
     }
 }
 
-fun Dispatcher.route(filter: Filter, content: Router.() -> Unit) {
-    val router = Router(this, filter, content)
-
-    addRouter(router)
-}
-
-fun Dispatcher.routing(content: Router.() -> Unit) {
+fun Dispatcher.routing(content: Router<HandlerEnvironment>.() -> Unit) {
     val f: Filter = { true }
-    addRouter(Router(this, f, content))
+    addRouter(Router(this, updateEnvironmentFactory, f, content))
 }
 
-fun Router.route(filter: Filter, content: Router.() -> Unit) {
-    val router = Router(this.dispatcher, filter, content)
-
+fun <T: HandlerEnvironment>Router<T>.route(filter: Filter, content: Router<T>.() -> Unit) {
+    val router = Router(this.dispatcher, this.environmentFactory, filter, content)
     addSubRouter(router)
 }
 
-fun Router.handle(handler: Handler) {
-    addSubRouter(Router(this.dispatcher, handler))
+fun <T: HandlerEnvironment>Router<T>.handle(handler: Handler<T>) {
+    addSubRouter(Router<T>(this.dispatcher, this.environmentFactory, handler))
+}
+
+fun Router<*>.middleware(middleware: Middleware) {
+    addMiddleware(middleware)
+}
+
+fun Router<*>.outerMiddleware(middleware: Middleware) {
+    addOuterMiddleware(middleware)
+}
+
+fun Router<*>.errorHandler(handler: Handler<ErrorEnvironment>) {
+    addErrorHandler(handler)
 }

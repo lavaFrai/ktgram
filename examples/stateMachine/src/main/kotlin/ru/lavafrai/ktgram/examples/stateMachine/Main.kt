@@ -8,17 +8,17 @@ import ru.lavafrai.ktgram.stateMachine.state
 import ru.lavafrai.ktgram.types.MessageType
 import ru.lavafrai.ktgram.types.payments.simplePrice
 
-fun Router.addHandlers() {
+fun Router<*>.addHandlers() {
     command("start") {
         state("known") {
             handle {
-                update.message!!.answer("Hi there again! I've remembered you!")
+                message.answer("Hi there again! I've remembered you!")
             }
         }
 
         stateLess {
             handle {
-                update.message!!.answer("Hello, new user!")
+                message.answer("Hello, new user!")
                 setState("known")
             }
         }

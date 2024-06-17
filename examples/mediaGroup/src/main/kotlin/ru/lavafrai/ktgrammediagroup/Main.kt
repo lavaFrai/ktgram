@@ -7,7 +7,7 @@ import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMediaType
 import ru.lavafrai.ktgram.types.media.inputmedia.toMedia
 
-fun Router.addHandlers() {
+fun Router<*>.addHandlers() {
     message {
         handle {
             val urls = listOf(
@@ -19,7 +19,7 @@ fun Router.addHandlers() {
 
             val images = urls.map { InputFile.fromURL(it).toMedia(InputMediaType.PHOTO) }
 
-            update.message!!.answerMediaGroup(images)
+            message.answerMediaGroup(images)
         }
     }
 }

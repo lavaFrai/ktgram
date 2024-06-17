@@ -5,10 +5,10 @@ import ru.lavafrai.ktgram.dispatcher.*
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.types.payments.simplePrice
 
-fun Router.addHandlers() {
+fun Router<*>.addHandlers() {
     command("start") {
         handle {
-            update.message!!.answerInvoice(
+            message.answerInvoice(
                 "cake",
                 "Delicious cake",
                 "cake",
@@ -20,8 +20,6 @@ fun Router.addHandlers() {
 
     command("refund") {
         handle {
-            val message = update.message!!
-
             val id = message.text!!.split(" ").getOrNull(1)
             id ?: run {
                 message.answer("Please provide payment id.")
@@ -41,13 +39,13 @@ fun Router.addHandlers() {
 
     preCheckoutQuery {
         handle {
-            update.preCheckoutQuery!!.answer(true)
+            preCheckoutQuery.answer(true)
         }
     }
 
     payment {
         handle {
-            update.message!!.answer("Payment received. You have bought a cake for a ${update.message!!.successfulPayment!!.totalAmount} stars. Enjoy!")
+            message.answer("Payment received. You have bought a cake for a ${message.successfulPayment!!.totalAmount} stars. Enjoy!")
         }
     }
 }

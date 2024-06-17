@@ -14,24 +14,22 @@ val exampleKeyboard = inlineKeyboard {
     button("Force Reply", "data3")
 }
 
-fun Router.addHandlers() {
+fun Router<*>.addHandlers() {
     text {
         handle {
-            update.message!!.reply("Do it:", replyMarkup = exampleKeyboard)
+            message.reply("Do it:", replyMarkup = exampleKeyboard)
         }
     }
 
-    callback(startsWith = "data3") {
+    callbackQuery(startsWith = "data3") {
         handle {
-            val callbackQuery = update.callbackQuery!!
             callbackQuery.message?.editReplyMarkup(inlineKeyboard {})
             callbackQuery.message?.reply("You will reply to this", replyMarkup = forceReply("Enter something"))
         }
     }
 
-    callback(notStartsWith = "data3") {
+    callbackQuery(notStartsWith = "data3") {
         handle {
-            val callbackQuery = update.callbackQuery!!
             callbackQuery.reply("You've clicked: '${callbackQuery.data}'")
             callbackQuery.message?.editReplyMarkup(inlineKeyboard {})
             callbackQuery.message?.editText("That's all")

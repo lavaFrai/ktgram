@@ -1,6 +1,8 @@
 package ru.lavafrai.ktgram.types.replymarkup.replyKeyboard
 
+import ChatAdministratorRights
 import KeyboardButtonPollType
+import KeyboardButtonRequestChat
 import KeyboardButtonRequestUsers
 import PollType
 import WebAppInfo
@@ -27,6 +29,10 @@ class ReplyKeyboardRowEnvironment() {
 
     fun requestUsers(text: String, requestId: Int, isBot: Boolean? = null, isPremium: Boolean? = null, maxQuantity: Int? = null, requestName: Boolean? = null, requestUsername: Boolean? = null, requestPhoto: Boolean? = null) {
         buttons.add(KeyboardButton(text, requestUsers = KeyboardButtonRequestUsers(requestId, isBot, isPremium, maxQuantity, requestName, requestUsername, requestPhoto)))
+    }
+
+    fun requestChat(text: String, requestId: Int, chatIsChannel: Boolean, chatIsForum: Boolean? = null, chatHasUsername: Boolean? = null, chatIsCreated: Boolean? = null, userAdministratorRights: ChatAdministratorRights? = null, botAdministratorRights: ChatAdministratorRights? = null, botIsMember: Boolean? = null, requestTitle: Boolean? = null, requestUsername: Boolean? = null, requestPhoto: Boolean? = null) {
+        buttons.add(KeyboardButton(text, requestChat = KeyboardButtonRequestChat(requestId, chatIsChannel, chatIsForum, chatHasUsername, chatIsCreated, userAdministratorRights, botAdministratorRights, botIsMember, requestTitle, requestUsername, requestPhoto)))
     }
 
     fun webAppButton(text: String, webApp: WebAppInfo) {

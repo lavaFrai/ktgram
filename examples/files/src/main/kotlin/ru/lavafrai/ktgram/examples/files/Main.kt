@@ -4,7 +4,7 @@ import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.*
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 
-fun Router.addHandlers() {
+fun Router<*>.addHandlers() {
     text {
         handle {
             val demo = InputFile.fromResource("kotlin.png")

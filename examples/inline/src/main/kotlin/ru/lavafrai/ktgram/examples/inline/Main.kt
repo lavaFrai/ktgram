@@ -9,20 +9,19 @@ import ru.lavafrai.ktgram.types.inline.inputMessageContent.InputInvoiceMessageCo
 import ru.lavafrai.ktgram.types.payments.simplePrice
 import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.inlineKeyboard
 
-fun Router.addHandlers() {
+
+val inlineKeyboard = inlineKeyboard {
+    row {
+        urlButton("Google", "https://google.com")
+        urlButton("Yandex", "https://yandex.ru")
+    }
+
+    button("Smth else", "nothing")
+}
+
+fun Router<*>.addHandlers() {
     inlineQuery {
         handle {
-            val query = update.inlineQuery!!
-
-            val inlineKeyboard = inlineKeyboard {
-                row {
-                    urlButton("Google", "https://google.com")
-                    urlButton("Yandex", "https://yandex.ru")
-                }
-
-                button("Еще какая то хуйня", "nothing")
-            }
-
             val invoice = InputInvoiceMessageContent(
                 title = "Cake",
                 description = "Really awesome cake",
@@ -31,7 +30,7 @@ fun Router.addHandlers() {
                 prices = simplePrice(1, "cake"),
             )
 
-            query.answer {
+            inlineQuery.answer {
                 location(55.7558f, 37.6176f, "Moscow", inputMessageContent = invoice)
                 photo(
                     "https://filesamples.com/samples/image/jpeg/sample_1920%C3%971280.jpeg",
