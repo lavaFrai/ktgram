@@ -1,10 +1,7 @@
 # ktgram
 [![](https://jitpack.io/v/lavaFrai/ktgram.svg)](https://jitpack.io/#lavaFrai/ktgram)
----
 
 **ktgram** is a modern and fully asynchronous framework for Telegram Bot's implementing the Telegram Bot API with kotlin.
-
----
 
 ## Features
 - Asynchronous with kotlin [coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
@@ -41,9 +38,7 @@ Add the following to your `build.gradle.kts` file:
 
 ```kotlin
 repositories {
-    maven {
-        url = uri("https://jitpack.io")
-    }
+    maven("https://jitpack.io")
 }
 
 dependencies {
