@@ -1,5 +1,5 @@
 # ktgram
-
+[![](https://jitpack.io/v/lavaFrai/ktgram.svg)](https://jitpack.io/#lavaFrai/ktgram)
 ---
 
 **ktgram** is a modern and fully asynchronous framework for Telegram Bot's implementing the Telegram Bot API with kotlin.

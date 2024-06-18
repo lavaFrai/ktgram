@@ -3,8 +3,9 @@ plugins {
 }
 rootProject.name = "ktgram"
 
-if (!System.getenv().containsKey("JITPACK")) include(":ktgram")
+if (System.getenv().containsKey("JITPACK")) include(":ktgram")
 else {
+    include(":ktgram")
     include(":examples:echo")
     include(":examples:filters")
     include(":examples:test")
