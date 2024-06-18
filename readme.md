@@ -11,7 +11,7 @@ Now this library is in the early stages of development and is not ready for prod
 
 ## Features
 - Asynchronous with kotlin [coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
-- Implements [Telegram Bot API 7.4](https://core.telegram.org/bots/api)
+- Implements [Telegram Bot API 7.5](https://core.telegram.org/bots/api)
 - And many more in the near future!
 
 ## Simple 

@@ -7,9 +7,10 @@ import ReactionType
 import ReplyParameters
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
+import retrofit2.http.Field
 import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.client.service.factories.MediaGroupBodyFactory
-import ru.lavafrai.ktgram.client.service.getClient
+import ru.lavafrai.ktgram.client.service.productionOkHttpClient
 import ru.lavafrai.ktgram.client.service.productionTelegramApiService
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.inline.inlineQueryResult.InlineQueryResult
@@ -23,15 +24,18 @@ import ru.lavafrai.ktgram.types.payments.ShippingOption
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.InlineKeyboardMarkup
+import java.net.Proxy
 
 class TelegramApi(
     private val bot: Bot,
+    val proxy: Proxy? = null,
     val json: Json = TelegramObject.tolerantJson,
-    private val service: TelegramApiService = productionTelegramApiService(bot.token, json),
+    private val networkClient: OkHttpClient = productionOkHttpClient(proxy),
+    private val service: TelegramApiService = productionTelegramApiService(bot.token, json, networkClient),
     private val mediaGroupBodyFactory: MediaGroupBodyFactory = MediaGroupBodyFactory(json),
 ) {
     val client: OkHttpClient
-        get() = service.getClient()
+        get() = networkClient
 
     suspend fun getMe(): User = service.getMe().getResult(bot)
 
@@ -679,7 +683,8 @@ class TelegramApi(
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
-    ) = service.editMessageText(chatId, messageId, inlineMessageId, text, parseMode, entities?.toTelegramList(), linkPreviewOptions, replyMarkup).getResult(bot)
+        businessConnectionId: String? = null,
+    ) = service.editMessageText(chatId, messageId, inlineMessageId, text, parseMode, entities?.toTelegramList(), linkPreviewOptions, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun editMessageCaption(
         chatId: Long? = null,
@@ -690,7 +695,8 @@ class TelegramApi(
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
-    ) = service.editMessageCaption(chatId, messageId, inlineMessageId, caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, replyMarkup).getResult(bot)
+        businessConnectionId: String? = null,
+    ) = service.editMessageCaption(chatId, messageId, inlineMessageId, caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun editMessageMedia(
         chatId: Long? = null,
@@ -698,20 +704,23 @@ class TelegramApi(
         media: InputMedia,
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
-    ) = service.editMessageMedia(chatId, messageId, inlineMessageId, mediaGroupBodyFactory.createMediaGroupBody(listOf(media)), replyMarkup).getResult(bot)
+        businessConnectionId: String? = null,
+    ) = service.editMessageMedia(chatId, messageId, inlineMessageId, mediaGroupBodyFactory.createMediaGroupBody(listOf(media)), replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun editMessageReplyMarkup(
         chatId: Long? = null,
         messageId: Int? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         inlineMessageId: String? = null,
-    ) = service.editMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup).getResult(bot)
+        businessConnectionId: String? = null,
+    ) = service.editMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun stopPoll(
         chatId: Long,
         messageId: Int,
         replyMarkup: InlineKeyboardMarkup? = null,
-    ) = service.stopPoll(chatId, messageId, replyMarkup).getResult(bot)
+        businessConnectionId: String? = null,
+    ) = service.stopPoll(chatId, messageId, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun deleteMessage(
         chatId: Long,
@@ -734,14 +743,16 @@ class TelegramApi(
         heading: Int? = null,
         proximityAlertRadius: Int? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
-    ) = service.editMessageLiveLocation(chatId, messageId, inlineMessageId, latitude, longitude, livePeriod, horizontalAccuracy, heading, proximityAlertRadius, replyMarkup).getResult(bot)
+        businessConnectionId: String? = null,
+    ) = service.editMessageLiveLocation(chatId, messageId, inlineMessageId, latitude, longitude, livePeriod, horizontalAccuracy, heading, proximityAlertRadius, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun stopMessageLiveLocation(
         chatId: Long? = null,
         messageId: Int? = null,
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
-    ) = service.stopMessageLiveLocation(chatId, messageId, inlineMessageId, replyMarkup).getResult(bot)
+        businessConnectionId: String? = null,
+    ) = service.stopMessageLiveLocation(chatId, messageId, inlineMessageId, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun sendInvoice(
         chatId: Long,
@@ -829,6 +840,11 @@ class TelegramApi(
         webAppQueryId: String,
         result: InlineQueryResult,
     ) = service.answerWebAppQuery(webAppQueryId, result).getResult(bot)
+
+    suspend fun getStarTransactions(
+        offset: Int,
+        limit: Int? = 100,
+    ) = service.getStarTransactions(offset, limit).getResult(bot)
 }
 
 fun getAllUpdates() = listOf(

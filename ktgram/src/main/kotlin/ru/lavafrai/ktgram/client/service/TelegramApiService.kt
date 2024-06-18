@@ -12,7 +12,6 @@ import ForumTopic
 import ReactionType
 import ReplyParameters
 import UserChatBoosts
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import ktgram.types.stickers.Sticker
 import okhttp3.*
@@ -34,6 +33,7 @@ import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.UserProfilePhotos
 import ru.lavafrai.ktgram.types.payments.LabeledPrice
 import ru.lavafrai.ktgram.types.payments.ShippingOption
+import ru.lavafrai.ktgram.types.payments.StarTransactions
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.poll.Poll
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
@@ -41,6 +41,7 @@ import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.InlineKeyboardMarkup
 import java.net.InetSocketAddress
 import java.net.Proxy
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 
@@ -834,6 +835,7 @@ interface TelegramApiService {
         @Field("entities") entities: TelegramList<MessageEntity>?,
         @Field("link_preview_options") linkPreviewOptions: LinkPreviewOptions?,
         @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
+        @Field("business_connection_id") businessConnectionId: String?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -847,6 +849,7 @@ interface TelegramApiService {
         @Field("caption_entities") captionEntities: TelegramList<MessageEntity>?,
         @Field("show_caption_above_media") showCaptionAboveMedia: Boolean?,
         @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
+        @Field("business_connection_id") businessConnectionId: String?,
     ): TelegramResult<Message>
 
     @Multipart
@@ -857,6 +860,7 @@ interface TelegramApiService {
         @Part("inline_message_id") inlineMessageId: String?,
         @Part media: List<MultipartBody.Part>,
         @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
+        @Field("business_connection_id") businessConnectionId: String?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -872,6 +876,7 @@ interface TelegramApiService {
         @Field("heading") heading: Int?,
         @Field("proximity_alert_radius") proximityAlertRadius: Int?,
         @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
+        @Field("business_connection_id") businessConnectionId: String?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -881,6 +886,7 @@ interface TelegramApiService {
         @Field("message_id") messageId: Int?,
         @Field("inline_message_id") inlineMessageId: String?,
         @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
+        @Field("business_connection_id") businessConnectionId: String?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -890,6 +896,7 @@ interface TelegramApiService {
         @Field("message_id") messageId: Int?,
         @Field("inline_message_id") inlineMessageId: String?,
         @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
+        @Field("business_connection_id") businessConnectionId: String?,
     ): TelegramResult<Message>
 
     @FormUrlEncoded
@@ -898,6 +905,7 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long,
         @Field("message_id") messageId: Int,
         @Field("reply_markup") replyMarkup: InlineKeyboardMarkup?,
+        @Field("business_connection_id") businessConnectionId: String?,
     ): TelegramResult<Poll>
 
     @FormUrlEncoded
@@ -1014,6 +1022,13 @@ interface TelegramApiService {
         @Field("web_app_query_id") webAppQueryId: String,
         @Field("result") result: InlineQueryResult,
     ): TelegramResult<SentWebAppMessage>
+
+    @FormUrlEncoded
+    @POST("getStarTransactions")
+    suspend fun getStarTransactions(
+        @Field("offset") offset: Int,
+        @Field("limit") limit: Int?,
+    ): TelegramResult<StarTransactions>
 }
 
 const val PRODUCTION = "https://api.telegram.org/bot{token}/"
@@ -1056,23 +1071,28 @@ class TgInterceptor(val log: Logger = LoggerFactory.getLogger(TgInterceptor::cla
 }
 
 
-val proxy = Proxy(Proxy.Type.HTTP, InetSocketAddress("127.0.0.1", 8080))
+fun productionOkHttpClient(proxy: Proxy?): OkHttpClient {
+    val builder = OkHttpClient.Builder()
+        .addInterceptor(TgInterceptor())
+        .callTimeout(1.minutes.toJavaDuration())
+        .readTimeout(1.minutes.toJavaDuration())
+        .writeTimeout(1.minutes.toJavaDuration())
+        .connectTimeout(3.seconds.toJavaDuration())
 
-val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-    .addInterceptor(TgInterceptor())
-    .callTimeout(10.minutes.toJavaDuration())
-    .readTimeout(10.minutes.toJavaDuration())
-    .writeTimeout(10.minutes.toJavaDuration())
-    // .proxy(proxy)
-    .build()
+    proxy?.let {
+        builder.proxy(proxy)
+    }
 
-fun productionTelegramApiService(token: String, json: Json? = null): TelegramApiService {
+    return builder.build()
+}
+
+
+fun productionTelegramApiService(token: String, json: Json? = null, client: OkHttpClient): TelegramApiService {
+
     val tolerantJson = json ?: Json {
         ignoreUnknownKeys = true;
         encodeDefaults = true
     }
-
-    val client = okHttpClient
 
     return Retrofit.Builder()
         .client(client)
@@ -1081,8 +1101,4 @@ fun productionTelegramApiService(token: String, json: Json? = null): TelegramApi
         .addConverterFactory(tolerantJson.asConverterFactory(MediaType.get("application/json")))
         .build()
         .create(TelegramApiService::class.java)
-}
-
-fun TelegramApiService.getClient(): OkHttpClient {
-    return okHttpClient
 }
