@@ -33,18 +33,21 @@ class Router<T: HandlerEnvironment>(val dispatcher: Dispatcher) {
         return subRoutes.any { it.canHandle(update) }
     }
 
-    suspend fun handleUpdate(update: Update) {
+    suspend fun handleUpdate(update: Update): Boolean {
         if (isEndpoint) {
             val environment = getEnvironment(update)
             handler!!.invoke(environment)
-            if (dispatcher.strategy == Dispatcher.DispatcherStrategy.HANDLE_ONE) return
+            if (dispatcher.strategy == Dispatcher.DispatcherStrategy.HANDLE_ONE) return true
         }
 
         subRoutes.forEach {
             if (it.canHandle(update)) {
-                it.handleUpdate(update)
+                val done = it.handleUpdate(update)
+                if (done && dispatcher.strategy == Dispatcher.DispatcherStrategy.HANDLE_ONE) return true
             }
         }
+
+        return false
     }
 
     fun addSubRouter(subRoute: Router<*>) {

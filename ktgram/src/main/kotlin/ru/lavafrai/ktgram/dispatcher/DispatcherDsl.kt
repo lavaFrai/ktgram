@@ -1,6 +1,7 @@
 package ru.lavafrai.ktgram.dispatcher
 
 import ru.lavafrai.ktgram.dispatcher.environments.*
+import ru.lavafrai.ktgram.stateMachine.State
 import ru.lavafrai.ktgram.stateMachine.getState
 import ru.lavafrai.ktgram.types.MessageType
 import ru.lavafrai.ktgram.types.UpdateType
@@ -59,15 +60,15 @@ fun Router<*>.newChatMembers(content: Router<MessageHandlerEnvironment>.() -> Un
 
 fun Router<*>.leftChatMember(content: Router<MessageHandlerEnvironment>.() -> Unit) = message(MessageType.LeftChatMember, content=content)
 
-fun <T: HandlerEnvironment> Router<T>.state(state: String, content: Router<T>.() -> Unit) {
+fun <T: HandlerEnvironment> Router<T>.state(vararg state: State?, content: Router<T>.() -> Unit) {
     addSubRouter(content) {
-        state == getState()
+        getState() in state
     }
 }
 
 fun <T: HandlerEnvironment> Router<T>.stateStartsWith(prefix: String, content: Router<T>.() -> Unit) {
     addSubRouter(content) {
-        getState()?.startsWith(prefix) ?: false
+        getState()?.name?.startsWith(prefix.lowercase()) ?: false
     }
 }
 

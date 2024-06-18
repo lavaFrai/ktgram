@@ -4,4 +4,5 @@ import ru.lavafrai.ktgram.types.Update
 
 class CallbackQueryHandlerEnvironment(update: Update): HandlerEnvironment(update) {
     val callbackQuery = update.callbackQuery!!
+    val query = callbackQuery
 }

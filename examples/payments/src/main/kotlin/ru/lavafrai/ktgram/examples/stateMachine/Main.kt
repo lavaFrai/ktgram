@@ -4,6 +4,7 @@ import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.*
 import ru.lavafrai.ktgram.exceptions.TelegramBadRequest
 import ru.lavafrai.ktgram.types.payments.simplePrice
+import java.net.Proxy
 
 fun Router<*>.addHandlers() {
     command("start") {

@@ -11,7 +11,7 @@ import ru.lavafrai.ktgram.types.Update
 
 class Dispatcher(
     val bot: Bot,
-    val strategy: DispatcherStrategy = DispatcherStrategy.HANDLE_ALL,
+    val strategy: DispatcherStrategy = DispatcherStrategy.HANDLE_ONE,
     val logger: Logger = bot.logger,
 ) {
     enum class DispatcherStrategy {

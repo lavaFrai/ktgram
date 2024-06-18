@@ -24,12 +24,14 @@ import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
 import ru.lavafrai.ktgram.utils.extractBotId
 import ru.lavafrai.ktgram.utils.validateToken
+import java.net.Proxy
 import java.util.concurrent.atomic.AtomicBoolean
 
 class Bot (
     token: String,
     default: DefaultBotProperties? = null,
-    val storage: BotStorage = MemoryStorage()
+    val storage: BotStorage = MemoryStorage(),
+    val proxy: Proxy? = null,
 ) {
     private val stopSignal = AtomicBoolean(false)
     private val _token: String
@@ -47,8 +49,8 @@ class Bot (
 
         this._token = token
         this.default = default ?: DefaultBotProperties()
-        this.api = TelegramApi(this)
-        this.updateFlow = UpdateProvider(this, this.default.timeout, stopSignal).getUpdatesFlow()
+        this.api = TelegramApi(this, proxy=proxy)
+        this.updateFlow = UpdateProvider(this, this.default.timeout, stopSignal, logger).getUpdatesFlow()
 
         dispatcher.addOuterMiddleware(LoggingMiddleware(dispatcher, logger))
     }
