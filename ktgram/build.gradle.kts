@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "ru.lavafrai.ktgram"
-version = "0.0.1"
+version = "1.0.0"
 val ktor_version: String by project
 
 repositories {

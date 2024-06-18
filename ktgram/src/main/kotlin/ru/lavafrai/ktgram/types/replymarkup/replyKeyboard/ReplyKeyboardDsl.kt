@@ -6,7 +6,6 @@ import KeyboardButtonRequestChat
 import KeyboardButtonRequestUsers
 import PollType
 import WebAppInfo
-import jdk.jshell.PersistentSnippet
 
 class ReplyKeyboardRowEnvironment() {
     private val buttons: MutableList<KeyboardButton> = mutableListOf()
