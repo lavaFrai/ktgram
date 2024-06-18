@@ -40,7 +40,7 @@ fun Router<*>.start() {
 Then we can write handler to get users name:
 
 ```kotlin
-fun Router<*>.start() {
+fun Router<*>.name() {
     val likeBotsKeyboard = inlineKeyboard {  // Create inline keyboard to send 
         row {
             button("Yes!", "yes")
@@ -63,7 +63,7 @@ fun Router<*>.start() {
 After that handling callback query:
 
 ```kotlin
-fun Router<*>.start() {
+fun Router<*>.likeBots() {
     state(StartStates.WaitingLikeBots) {
         callbackQuery("yes") {
             handle {
@@ -96,7 +96,7 @@ fun Router<*>.start() {
 And the last state to get users favorite programming language:
 
 ```kotlin
-fun Router<*>.start() {
+fun Router<*>.language() {
     state(StartStates.WaitingLanguage) {
         text {
             handle {
@@ -137,4 +137,4 @@ suspend fun sendSummary(chat: Chat, name: String, likeBots: Boolean, language: S
 
 After that you can start your bot and test it.
 
-Full example: [link](https://github.com/lavaFrai/ktgram/tree/master/examples/stateMachine)
+Full example: [link](https://github.com/lavaFrai/ktgram/blob/master/examples/stateMachine/src/main/kotlin/ru/lavafrai/ktgram/examples/stateMachine/Main.kt)
