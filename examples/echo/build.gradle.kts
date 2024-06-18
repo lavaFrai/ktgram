@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     implementation(project(":ktgram"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 }

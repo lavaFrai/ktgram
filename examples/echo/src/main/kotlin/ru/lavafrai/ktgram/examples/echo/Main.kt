@@ -1,12 +1,18 @@
 package ru.lavafrai.ktgram.examples.echo
 
+import kotlinx.coroutines.delay
 import ru.lavafrai.ktgram.client.Bot
 import ru.lavafrai.ktgram.dispatcher.*
+import ru.lavafrai.ktgram.types.ChatAction
+import ru.lavafrai.ktgram.utils.using
 
 fun Router<*>.addHandlers() {
     text {
         handle {
-            message.reply("You said: ${update.message!!.text}")
+            using(ChatAction.TYPING) {
+                delay(2000)
+                message.reply("You said: ${update.message!!.text}")
+            }
         }
     }
 }

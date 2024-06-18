@@ -138,3 +138,13 @@ suspend fun sendSummary(chat: Chat, name: String, likeBots: Boolean, language: S
 After that you can start your bot and test it.
 
 Full example: [link](https://github.com/lavaFrai/ktgram/blob/master/examples/stateMachine/src/main/kotlin/ru/lavafrai/ktgram/examples/stateMachine/Main.kt)
+
+## Important notes
+
+ - Names of states serializes in low case. So be carefully because state names are case-insensitive. `State` and `state` are the same names.
+ - Names of states serializes including parent object name. For example `StartStates.WaitingName` will be serialized to store as `startstates$waitingname`.
+
+## Storages
+
+By default, the state machine uses `MemoryStorage` to store states. But you can implement your own storage by implementing `StateStorage` interface.
+Or use available implementations of storage [included](https://github.com/lavaFrai/ktgram/tree/master/ktgram/src/main/kotlin/ru/lavafrai/ktgram/stateMachine/storage) in framework.

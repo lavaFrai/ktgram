@@ -354,10 +354,10 @@ class TelegramApi(
 
     suspend fun sendChatAction(
         chatId: Long,
-        action: String,
+        action: ChatAction,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
-    ) = service.sendChatAction(businessConnectionId, chatId, messageThreadId, action).getResult()
+    ) = service.sendChatAction(businessConnectionId, chatId, messageThreadId, action.action).getResult()
 
     suspend fun setMessageReaction(
         chatId: Long,

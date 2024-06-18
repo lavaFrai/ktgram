@@ -463,7 +463,7 @@ class Bot (
      */
     suspend fun sendChatAction(
         chatId: Long,
-        action: String,
+        action: ChatAction,
     ) = api.sendChatAction(chatId, action)
 
     /**
