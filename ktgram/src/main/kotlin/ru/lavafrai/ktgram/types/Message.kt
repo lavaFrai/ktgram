@@ -211,7 +211,7 @@ class Message(
 ) : TelegramObject() {
     suspend fun answer(
         text: String,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -232,7 +232,7 @@ class Message(
 
     suspend fun reply(
         text: String,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -256,7 +256,7 @@ class Message(
     suspend fun answerPhoto(
         photo: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -282,7 +282,7 @@ class Message(
     suspend fun replyPhoto(
         photo: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -310,7 +310,7 @@ class Message(
     suspend fun answerAudio(
         audio: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         performer: String? = null,
@@ -342,7 +342,7 @@ class Message(
     suspend fun replyAudio(
         audio: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         performer: String? = null,
@@ -377,7 +377,7 @@ class Message(
         document: InputFile,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -405,7 +405,7 @@ class Message(
         document: InputFile,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -438,7 +438,7 @@ class Message(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -476,7 +476,7 @@ class Message(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -516,7 +516,7 @@ class Message(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -552,7 +552,7 @@ class Message(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -586,7 +586,7 @@ class Message(
     suspend fun answerVoice(
         voice: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         disableNotification: Boolean? = null,
@@ -612,7 +612,7 @@ class Message(
     suspend fun replyVoice(
         voice: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         disableNotification: Boolean? = null,
@@ -743,7 +743,7 @@ class Message(
         messageEffectId: String? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message {
-        return bot.api.sendInvoice(
+        return bot.sendInvoice(
             chat.id,
             title,
             description,
@@ -802,7 +802,7 @@ class Message(
         messageEffectId: String? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message {
-        return bot.api.sendInvoice(
+        return bot.sendInvoice(
             chat.id,
             title,
             description,
@@ -1055,7 +1055,7 @@ class Message(
         allowsMultipleAnswers: Boolean? = null,
         correctOptionId: Int? = null,
         explanation: String? = null,
-        explanationParseMode: String? = null,
+        explanationParseMode: ParseMode? = null,
         explanationEntities: List<MessageEntity>? = null,
         openPeriod: Int? = null,
         closeDate: Int? = null,
@@ -1127,12 +1127,12 @@ class Message(
 
     suspend fun editText(
         text: String,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message {
-        return bot.api.editMessageText(
+        return bot.editMessageText(
             chat.id,
             messageId,
             text,
@@ -1145,12 +1145,12 @@ class Message(
 
     suspend fun editCaption(
         caption: String,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message {
-        return bot.api.editMessageCaption(
+        return bot.editMessageCaption(
             chat.id,
             messageId,
             caption,

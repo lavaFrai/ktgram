@@ -16,4 +16,5 @@ else {
     include(":examples:inline")
     include(":examples:stateMachine")
     include(":examples:full")
+    include(":examples:markdown")
 }

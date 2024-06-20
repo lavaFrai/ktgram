@@ -9,10 +9,7 @@ import ru.lavafrai.ktgram.utils.using
 fun Router<*>.addHandlers() {
     text {
         handle {
-            using(ChatAction.TYPING) {
-                delay(2000)
-                message.reply("You said: ${update.message!!.text}")
-            }
+            message.reply("You said: ${message.text}")
         }
     }
 }

@@ -1,9 +1,10 @@
 package ru.lavafrai.ktgram.client
 
 import okio.Timeout
+import ru.lavafrai.ktgram.types.ParseMode
 
 class DefaultBotProperties(
-    val parseMode: String?=null,
+    val parseMode: ParseMode? = ParseMode.NONE,
     val disableNotification: Boolean?=null,
     val protectContent: Boolean?=null,
     val allowSendingWithoutReply: Boolean?=null,

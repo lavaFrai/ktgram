@@ -9,7 +9,6 @@ import okhttp3.Request
 import org.slf4j.LoggerFactory
 import ru.gildor.coroutines.okhttp.await
 import ru.lavafrai.ktgram.client.updateProvider.UpdateProvider
-import ru.lavafrai.ktgram.client.service.TelegramApiService
 import ru.lavafrai.ktgram.dispatcher.Dispatcher
 import ru.lavafrai.ktgram.dispatcher.middlewares.LoggingMiddleware
 import ru.lavafrai.ktgram.stateMachine.StateMachine
@@ -18,10 +17,13 @@ import ru.lavafrai.ktgram.stateMachine.storage.MemoryStorage
 import ru.lavafrai.ktgram.types.*
 import ru.lavafrai.ktgram.types.inputfile.InputFile
 import ru.lavafrai.ktgram.types.media.DiceEmoji
+import ru.lavafrai.ktgram.types.media.LinkPreviewOptions
 import ru.lavafrai.ktgram.types.media.MessageEntity
 import ru.lavafrai.ktgram.types.media.inputmedia.InputMedia
+import ru.lavafrai.ktgram.types.payments.LabeledPrice
 import ru.lavafrai.ktgram.types.poll.InputPollOption
 import ru.lavafrai.ktgram.types.replymarkup.ReplyMarkup
+import ru.lavafrai.ktgram.types.replymarkup.inlineKeyboard.InlineKeyboardMarkup
 import ru.lavafrai.ktgram.utils.extractBotId
 import ru.lavafrai.ktgram.utils.validateToken
 import java.net.Proxy
@@ -29,16 +31,16 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class Bot (
     token: String,
-    default: DefaultBotProperties? = null,
+    properties: DefaultBotProperties? = null,
     val storage: BotStorage = MemoryStorage(),
-    val proxy: Proxy? = null,
+    private val proxy: Proxy? = null,
 ) {
     private val stopSignal = AtomicBoolean(false)
     private val _token: String
     private var default: DefaultBotProperties
     val api: TelegramApi
     private lateinit var me: User
-    val logger = LoggerFactory.getLogger(Bot::class.java)
+    val logger = LoggerFactory.getLogger(Bot::class.java)!!
     private val updateFlow: Flow<Update>
     private val handlerScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
     val dispatcher = Dispatcher(this)
@@ -48,7 +50,7 @@ class Bot (
         validateToken(token)
 
         this._token = token
-        this.default = default ?: DefaultBotProperties()
+        this.default = properties ?: DefaultBotProperties()
         this.api = TelegramApi(this, proxy=proxy)
         this.updateFlow = UpdateProvider(this, this.default.timeout, stopSignal, logger).getUpdatesFlow()
 
@@ -124,7 +126,7 @@ class Bot (
         text: String,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         entities: List<ru.lavafrai.ktgram.types.media.MessageEntity>? = null,
         linkPreviewOptions: ru.lavafrai.ktgram.types.media.LinkPreviewOptions? = null,
         disableNotification: Boolean? = null,
@@ -133,7 +135,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendMessage(
-        chatId, text, businessConnectionId, messageThreadId, parseMode, entities, linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        chatId, text, businessConnectionId, messageThreadId, parseMode ?: default.parseMode, entities, linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
     /**
@@ -164,7 +166,7 @@ class Bot (
         fromChatId: Long,
         messageId: Int,
         caption: String? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -172,7 +174,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
     ) = api.copyMessage(
-        chatId, messageThreadId, fromChatId, messageId, caption, parseMode, captionEntities, showCaptionAboveMedia, disableNotification, protectContent, replyParameters, replyMarkup
+        chatId, messageThreadId, fromChatId, messageId, caption, parseMode ?: default.parseMode, captionEntities, showCaptionAboveMedia, disableNotification, protectContent, replyParameters, replyMarkup
     )
 
     /**
@@ -184,7 +186,7 @@ class Bot (
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         caption: String? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -194,7 +196,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendPhoto(
-        chatId, photo, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        chatId, photo, businessConnectionId, messageThreadId, caption, parseMode ?: default.parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
     /**
@@ -208,7 +210,7 @@ class Bot (
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         caption: String? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         performer: String? = null,
@@ -220,7 +222,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendAudio(
-        chatId, audio, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, duration, performer, title, thumbnail, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        chatId, audio, businessConnectionId, messageThreadId, caption, parseMode ?: default.parseMode, captionEntities, duration, performer, title, thumbnail, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
     /**
@@ -233,7 +235,7 @@ class Bot (
         messageThreadId: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -242,7 +244,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendDocument(
-        chatId, document, businessConnectionId, messageThreadId, thumbnail, caption, parseMode, captionEntities, disableContentTypeDetection, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        chatId, document, businessConnectionId, messageThreadId, thumbnail, caption, parseMode ?: default.parseMode, captionEntities, disableContentTypeDetection, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
     /**
@@ -258,7 +260,7 @@ class Bot (
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -269,7 +271,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendVideo(
-        chatId, video, businessConnectionId, messageThreadId, duration, width, height, thumbnail, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, supportsStreaming, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        chatId, video, businessConnectionId, messageThreadId, duration, width, height, thumbnail, caption, parseMode ?: default.parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, supportsStreaming, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
     /**
@@ -285,7 +287,7 @@ class Bot (
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -295,7 +297,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendAnimation(
-        chatId, animation, businessConnectionId, messageThreadId, duration, width, height, thumbnail, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        chatId, animation, businessConnectionId, messageThreadId, duration, width, height, thumbnail, caption, parseMode ?: default.parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
     /**
@@ -307,7 +309,7 @@ class Bot (
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         caption: String? = null,
-        parseMode: String? = default.parseMode,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         disableNotification: Boolean? = null,
@@ -316,7 +318,7 @@ class Bot (
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = api.sendVoice(
-        chatId, voice, businessConnectionId, messageThreadId, caption, parseMode, captionEntities, duration, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        chatId, voice, businessConnectionId, messageThreadId, caption, parseMode ?: default.parseMode, captionEntities, duration, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     )
 
     /**
@@ -424,14 +426,14 @@ class Bot (
         options: List<InputPollOption>,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
-        questionParseMode: String? = null,
+        questionParseMode: ParseMode? = null,
         questionEntities: List<MessageEntity>? = null,
         isAnonymous: Boolean? = null,
         type: String? = null,
         allowsMultipleAnswers: Boolean? = null,
         correctOptionId: Int? = null,
         explanation: String? = null,
-        explanationParseMode: String? = null,
+        explanationParseMode: ParseMode? = null,
         explanationEntities: List<MessageEntity>? = null,
         openPeriod: Int? = null,
         closeDate: Int? = null,
@@ -465,6 +467,61 @@ class Bot (
         chatId: Long,
         action: ChatAction,
     ) = api.sendChatAction(chatId, action)
+
+    suspend fun editMessageCaption(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        caption: String,
+        inlineMessageId: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+        businessConnectionId: String? = null,
+    ) = api.editMessageCaption(chatId, messageId, caption, inlineMessageId, parseMode ?: default.parseMode, captionEntities, showCaptionAboveMedia, replyMarkup, businessConnectionId)
+
+    suspend fun editMessageText(
+        chatId: Long? = null,
+        messageId: Int? = null,
+        text: String,
+        inlineMessageId: String? = null,
+        parseMode: ParseMode? = null,
+        entities: List<MessageEntity>? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+        businessConnectionId: String? = null,
+    ) = api.editMessageText(chatId, messageId, text, inlineMessageId, parseMode ?: default.parseMode, entities, linkPreviewOptions, replyMarkup, businessConnectionId)
+
+    suspend fun sendInvoice(
+        chatId: Long,
+        title: String,
+        description: String,
+        payload: String,
+        currency: String,
+        prices: List<LabeledPrice>,
+        providerToken: String? = null,
+        messageThreadId: String? = null,
+        maxTipAmount: Int? = null,
+        suggestedTipAmounts: List<Int>? = null,
+        startParameter: String? = null,
+        providerData: String? = null,
+        photoUrl: String? = null,
+        photoSize: Int? = null,
+        photoWidth: Int? = null,
+        photoHeight: Int? = null,
+        needName: Boolean? = null,
+        needPhoneNumber: Boolean? = null,
+        needEmail: Boolean? = null,
+        needShippingAddress: Boolean? = null,
+        sendPhoneNumberToProvider: Boolean? = null,
+        sendEmailToProvider: Boolean? = null,
+        isFlexible: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ) = api.sendInvoice(chatId, title, description, payload, currency, prices, providerToken, messageThreadId, maxTipAmount, suggestedTipAmounts, startParameter, providerData, photoUrl, photoSize, photoWidth, photoHeight, needName, needPhoneNumber, needEmail, needShippingAddress, sendPhoneNumberToProvider, sendEmailToProvider, isFlexible, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup)
 
     /**
      * Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.

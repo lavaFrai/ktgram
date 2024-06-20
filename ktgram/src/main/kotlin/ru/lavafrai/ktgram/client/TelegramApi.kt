@@ -53,7 +53,7 @@ class TelegramApi(
         text: String,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
         disableNotification: Boolean? = null,
@@ -62,7 +62,7 @@ class TelegramApi(
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = service.sendMessage(
-        businessConnectionId, chatId, messageThreadId, text, parseMode, entities?.toTelegramList(), linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
+        businessConnectionId, chatId, messageThreadId, text, parseMode?.mode, entities?.toTelegramList(), linkPreviewOptions, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup,
     ).getResult(bot)
 
     suspend fun getFile(fileId: String) = service.getFile(fileId).getResult(bot)
@@ -95,7 +95,7 @@ class TelegramApi(
         fromChatId: Long,
         messageId: Int,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -103,7 +103,7 @@ class TelegramApi(
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = service.copyMessage(
-        chatId, messageThreadId, fromChatId, messageId, caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, disableNotification, protectContent, replyParameters, replyMarkup
+        chatId, messageThreadId, fromChatId, messageId, caption, parseMode?.mode, captionEntities?.toTelegramList(), showCaptionAboveMedia, disableNotification, protectContent, replyParameters, replyMarkup
     ).getResult(bot)
 
     suspend fun copyMessages(
@@ -124,7 +124,7 @@ class TelegramApi(
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -133,7 +133,7 @@ class TelegramApi(
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo.getMultiPartBodyPart("photo"), caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+    ) = service.sendPhoto(businessConnectionId, chatId, messageThreadId, photo.getMultiPartBodyPart("photo"), caption, parseMode?.mode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendAudio(
         chatId: Long,
@@ -141,7 +141,7 @@ class TelegramApi(
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         performer: String? = null,
@@ -152,7 +152,7 @@ class TelegramApi(
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = service.sendAudio(businessConnectionId, chatId, messageThreadId, audio.getMultiPartBodyPart("audio"), caption, parseMode, captionEntities?.toTelegramList(), duration, performer, title, thumbnail?.getMultiPartBodyPart("thumb"), disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+    ) = service.sendAudio(businessConnectionId, chatId, messageThreadId, audio.getMultiPartBodyPart("audio"), caption, parseMode?.mode, captionEntities?.toTelegramList(), duration, performer, title, thumbnail?.getMultiPartBodyPart("thumb"), disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendDocument(
         chatId: Long,
@@ -161,7 +161,7 @@ class TelegramApi(
         messageThreadId: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         disableContentTypeDetection: Boolean? = false,
         disableNotification: Boolean? = null,
@@ -169,7 +169,7 @@ class TelegramApi(
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = service.sendDocument(businessConnectionId, chatId, messageThreadId, document.getMultiPartBodyPart("document"), thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities?.toTelegramList(), disableContentTypeDetection, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+    ) = service.sendDocument(businessConnectionId, chatId, messageThreadId, document.getMultiPartBodyPart("document"), thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode?.mode, captionEntities?.toTelegramList(), disableContentTypeDetection, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendVideo(
         chatId: Long,
@@ -181,7 +181,7 @@ class TelegramApi(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -191,7 +191,7 @@ class TelegramApi(
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = service.sendVideo(businessConnectionId, chatId, messageThreadId, video.getMultiPartBodyPart("video"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, supportsStreaming, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+    ) = service.sendVideo(businessConnectionId, chatId, messageThreadId, video.getMultiPartBodyPart("video"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode?.mode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, supportsStreaming, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendAnimation(
         chatId: Long,
@@ -203,7 +203,7 @@ class TelegramApi(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -212,7 +212,7 @@ class TelegramApi(
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = service.sendAnimation(businessConnectionId, chatId, messageThreadId, animation.getMultiPartBodyPart("animation"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+    ) = service.sendAnimation(businessConnectionId, chatId, messageThreadId, animation.getMultiPartBodyPart("animation"), duration, width, height, thumbnail?.getMultiPartBodyPart("thumb"), caption, parseMode?.mode, captionEntities?.toTelegramList(), showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendVoice(
         chatId: Long,
@@ -220,7 +220,7 @@ class TelegramApi(
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         disableNotification: Boolean? = null,
@@ -228,7 +228,7 @@ class TelegramApi(
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
-    ) = service.sendVoice(businessConnectionId, chatId, messageThreadId, voice.getMultiPartBodyPart("voice"), caption, parseMode, captionEntities?.toTelegramList(), duration, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
+    ) = service.sendVoice(businessConnectionId, chatId, messageThreadId, voice.getMultiPartBodyPart("voice"), caption, parseMode?.mode, captionEntities?.toTelegramList(), duration, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup).getResult(bot)
 
     suspend fun sendVideoNote(
         chatId: Long,
@@ -317,14 +317,14 @@ class TelegramApi(
         options: List<InputPollOption>,
         businessConnectionId: String? = null,
         messageThreadId: Int? = null,
-        questionParseMode: String? = null,
+        questionParseMode: ParseMode? = null,
         questionEntities: List<MessageEntity>? = null,
         isAnonymous: Boolean? = null,
         type: String? = null,
         allowsMultipleAnswers: Boolean? = null,
         correctOptionId: Int? = null,
         explanation: String? = null,
-        explanationParseMode: String? = null,
+        explanationParseMode: ParseMode? = null,
         explanationEntities: List<MessageEntity>? = null,
         openPeriod: Int? = null,
         closeDate: Int? = null,
@@ -335,7 +335,7 @@ class TelegramApi(
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ) = service.sendPoll(
-        businessConnectionId, chatId, messageThreadId, question, questionParseMode, questionEntities?.toTelegramList(), options.toTelegramList(), isAnonymous, type, allowsMultipleAnswers, correctOptionId, explanation, explanationParseMode, explanationEntities?.toTelegramList(), openPeriod, closeDate, isClosed, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup
+        businessConnectionId, chatId, messageThreadId, question, questionParseMode?.mode, questionEntities?.toTelegramList(), options.toTelegramList(), isAnonymous, type, allowsMultipleAnswers, correctOptionId, explanation, explanationParseMode?.mode, explanationEntities?.toTelegramList(), openPeriod, closeDate, isClosed, disableNotification, protectContent, messageEffectId, replyParameters, replyMarkup
     ).getResult(bot)
 
     suspend fun sendDice(
@@ -679,24 +679,24 @@ class TelegramApi(
         messageId: Int? = null,
         text: String,
         inlineMessageId: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         businessConnectionId: String? = null,
-    ) = service.editMessageText(chatId, messageId, inlineMessageId, text, parseMode, entities?.toTelegramList(), linkPreviewOptions, replyMarkup, businessConnectionId).getResult(bot)
+    ) = service.editMessageText(chatId, messageId, inlineMessageId, text, parseMode?.mode, entities?.toTelegramList(), linkPreviewOptions, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun editMessageCaption(
         chatId: Long? = null,
         messageId: Int? = null,
         caption: String,
         inlineMessageId: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         businessConnectionId: String? = null,
-    ) = service.editMessageCaption(chatId, messageId, inlineMessageId, caption, parseMode, captionEntities?.toTelegramList(), showCaptionAboveMedia, replyMarkup, businessConnectionId).getResult(bot)
+    ) = service.editMessageCaption(chatId, messageId, inlineMessageId, caption, parseMode?.mode, captionEntities?.toTelegramList(), showCaptionAboveMedia, replyMarkup, businessConnectionId).getResult(bot)
 
     suspend fun editMessageMedia(
         chatId: Long? = null,

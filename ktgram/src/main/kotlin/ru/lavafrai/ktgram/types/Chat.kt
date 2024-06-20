@@ -85,7 +85,7 @@ class Chat(
 
     suspend fun sendText(
         text: String,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -106,7 +106,7 @@ class Chat(
     suspend fun sendPhoto(
         photo: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -129,7 +129,7 @@ class Chat(
     suspend fun sendAudio(
         audio: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         performer: String? = null,
@@ -159,7 +159,7 @@ class Chat(
         document: InputFile,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -187,7 +187,7 @@ class Chat(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -222,7 +222,7 @@ class Chat(
         height: Int? = null,
         thumbnail: InputFile? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         showCaptionAboveMedia: Boolean? = null,
         hasSpoiler: Boolean? = null,
@@ -251,7 +251,7 @@ class Chat(
     suspend fun sendVoice(
         voice: InputFile,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         disableNotification: Boolean? = null,
@@ -329,7 +329,7 @@ class Chat(
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
         replyMarkup: ReplyMarkup? = null,
-    ): Message = bot.api.sendInvoice(
+    ): Message = bot.sendInvoice(
         id,
         title,
         description,
@@ -456,7 +456,7 @@ class Chat(
         allowsMultipleAnswers: Boolean? = null,
         correctOptionId: Int? = null,
         explanation: String? = null,
-        explanationParseMode: String? = null,
+        explanationParseMode: ParseMode? = null,
         explanationEntities: List<MessageEntity>? = null,
         openPeriod: Int? = null,
         closeDate: Int? = null,
